@@ -1,4 +1,7 @@
 {
+  "ConnectionStrings": {
+    "SqlServer": "your string"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",
