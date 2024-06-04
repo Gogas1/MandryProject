@@ -2,5 +2,7 @@
 {
     public class Bedrooms
     {
+        public int id { get; set; }
+
     }
 }

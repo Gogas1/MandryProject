@@ -5,5 +5,7 @@
         public int id { get; set; }
         public User guest_id { get; set; }
         public Housing housing_id { get; set; }
+
+        public List<Reservation_bedrooms> bedrooms { get; set; }
     }
 }
