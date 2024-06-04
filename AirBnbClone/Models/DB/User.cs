@@ -8,9 +8,10 @@
         public string phone { get; set; }
         public string email { get; set; }
         public string password_hash { get; set; }
-        public int profile_image_id { get; set; }
+        public Images profile_image_id {  get; set; }
         public bool is_owner {  get; set; }
 
         public List<Reservation> Reservations { get; set; }
+        public List<Housing> Housings { get; set; }
     }
 }

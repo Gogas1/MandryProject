@@ -3,6 +3,7 @@
     public class Reservation
     {
         public int id { get; set; }
-        public 
+        public User guest_id { get; set; }
+        public Housing housing_id { get; set; }
     }
 }
