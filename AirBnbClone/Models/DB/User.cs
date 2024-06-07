@@ -2,16 +2,17 @@
 {
     public class User
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string surname { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
-        public string password_hash { get; set; }
-        public Images profile_image_id {  get; set; }
-        public bool is_owner {  get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Surname { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public bool IsOwner {  get; set; }
 
-        public List<Reservation> Reservations { get; set; }
-        public List<Housing> Housings { get; set; }
+        public Image ProfileImage {  get; set; }
+        public ICollection<Availability> Availability { get; set; } = new List<Availability>();
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<Housing> Housings { get; set; } = new List<Housing>();
     }
 }
