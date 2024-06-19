@@ -1,0 +1,6 @@
+@Mandry_HostAddress = http://localhost:5200
+
+GET {{Mandry_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
