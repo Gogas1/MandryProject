@@ -1,4 +1,6 @@
 ﻿using Mandry.Interfaces.Validation;
+using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Mandry.Validation
 {
@@ -13,17 +15,58 @@ namespace Mandry.Validation
 
         public ValidationErrors ValidateBirthDate(DateTime date)
         {
-            throw new NotImplementedException();
+            List<ValidationError> errors = new List<ValidationError>();
+            ValidationErrors validationErrors = new ValidationErrors("birthDate", errors);
+
+            if (date == null)
+            {
+                errors.Add(new ValidationError("date", "not-empty"));
+            }
+
+            if (DateTime.Now - date < _validatorOptions.BirthDateMinimalAge)
+            {
+                errors.Add(new ValidationError("date", "less-eighteen"));
+            }
+
+            return validationErrors;
         }
 
         public ValidationErrors ValidateEmail(string email)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            List<ValidationError> errors = new List<ValidationError>();
+            ValidationErrors validationErrors = new ValidationErrors("email", errors);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                errors.Add(new ValidationError("email", "not-empty"));
+            }
+            if (!_validatorOptions.EmailIsValidating) return validationErrors;
+
+            if (!Regex.IsMatch(email, _validatorOptions.EmailPattern))
+            {
+                errors.Add(new ValidationError("email", "not-match"));
+            }
+
+            return validationErrors;
         }
 
         public ValidationErrors ValidateNotNull(string value, string subject)
         {
-            throw new NotImplementedException();
+            List<ValidationError> errors = new List<ValidationError>();
+            ValidationErrors validationErrors = new ValidationErrors("string", errors);
+
+            if (string.IsNullOrEmpty(value))
+            {
+                errors.Add(new ValidationError("value", "not-empty"));
+            }
+
+            if (string.IsNullOrEmpty(subject))
+            {
+                errors.Add(new ValidationError("subject", "not-empty"));
+            }
+
+            return validationErrors;
         }
 
         public ValidationErrors ValidatePassword(string password)
@@ -73,7 +116,21 @@ namespace Mandry.Validation
         /// Проверка на лишние символы и не пустую строку
         public ValidationErrors ValidatePhone(string phone)
         {
-            throw new NotImplementedException();
+            List<ValidationError> errors = new List<ValidationError>();
+            ValidationErrors validationErrors = new ValidationErrors("phone", errors);
+
+            if (string.IsNullOrEmpty(phone))
+            {
+                errors.Add(new ValidationError("phone", "not-empty"));
+            }
+            if (!_validatorOptions.EmailIsValidating) return validationErrors;
+
+            if (!Regex.IsMatch(phone, _validatorOptions.PhoneAvailableCharacters))
+            {
+                errors.Add(new ValidationError("phone", "not-valid"));
+            }
+
+            return validationErrors;
         }
     }
 
@@ -93,9 +150,15 @@ namespace Mandry.Validation
 
         #region Phone general settings
         public bool PhoneIsValidating { get; set; } = true;
-        public string AvailableCharacters { get; set; } = "";
+        public string PhoneAvailableCharacters { get; set; } = @"^+[\d]";
 
         #endregion Phone settings
+
+        #region Email settings
+        public bool EmailIsValidating { get; set; } = true;
+        public string EmailPattern { get; set; } = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+        #endregion Email settings
 
         #region Birth date settings
 
