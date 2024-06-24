@@ -4,6 +4,7 @@ using Mandry.Interfaces.Validation;
 using Mandry.Models.DB;
 using Microsoft.AspNetCore.Mvc;
 using Mandry.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Mandry.Controllers
 {
@@ -129,6 +130,13 @@ namespace Mandry.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        [Authorize]
+        [HttpPost("verify-token")]
+        public IActionResult VerifyToken()
+        {
+            return Ok(new { verified = true });
         }
     }
 }

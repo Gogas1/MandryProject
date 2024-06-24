@@ -18,14 +18,9 @@ namespace Mandry.Validation
             List<ValidationError> errors = new List<ValidationError>();
             ValidationErrors validationErrors = new ValidationErrors("birthDate", errors);
 
-            if (date == null)
-            {
-                errors.Add(new ValidationError("date", "not-empty"));
-            }
-
             if (DateTime.Now - date < _validatorOptions.BirthDateMinimalAge)
             {
-                errors.Add(new ValidationError("date", "less-eighteen"));
+                errors.Add(new ValidationError("date", _validatorOptions.BirthDateMinimalAge.Days.ToString()));
             }
 
             return validationErrors;
@@ -59,11 +54,6 @@ namespace Mandry.Validation
             if (string.IsNullOrEmpty(value))
             {
                 errors.Add(new ValidationError("value", "not-empty"));
-            }
-
-            if (string.IsNullOrEmpty(subject))
-            {
-                errors.Add(new ValidationError("subject", "not-empty"));
             }
 
             return validationErrors;

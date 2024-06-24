@@ -28,6 +28,7 @@ namespace Mandry.Controllers
             _authenticationService = authenticationService;
         }
 
+        [HttpPost("auth/signup")]
         public async Task<IActionResult> SignUp(string name, string surname, string phone, string email, string password, DateTime birthDate)
         {
             try
