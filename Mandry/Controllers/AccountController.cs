@@ -33,12 +33,6 @@ namespace Mandry.Controllers
         {
             try
             {
-                name = name.Trim();
-                surname = surname.Trim();
-                phone = phone.Trim();
-                email = email.Trim();
-                
-
                 ValidationErrors nameErrors = _credentialValidator.ValidateNotNull(name, "name");
                 ValidationErrors surnameErrors = _credentialValidator.ValidateNotNull(surname, "surname");
                 ValidationErrors birthDateErrors = _credentialValidator.ValidateBirthDate(birthDate);
@@ -54,7 +48,7 @@ namespace Mandry.Controllers
                     });
                 }
 
-                if (!(string.IsNullOrEmpty(password) && string.IsNullOrEmpty(email) || string.IsNullOrEmpty(phone)))
+                if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone))
                 {
                     ValidationErrors passwordErrors = _credentialValidator.ValidatePassword(password);
                     ValidationErrors emailErrors = _credentialValidator.ValidateEmail(email);

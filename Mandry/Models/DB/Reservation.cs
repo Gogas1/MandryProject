@@ -1,4 +1,6 @@
-﻿namespace Mandry.Models.DB
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Mandry.Models.DB
 {
     public class Reservation
     {
@@ -8,6 +10,7 @@
 
         public User Guest { get; set; }
         public Housing Housing { get; set; }
+        [DeleteBehavior(DeleteBehavior.NoAction)]
         public ICollection<Bedroom> Bedrooms { get; set; } = new List<Bedroom>();
     }
 }

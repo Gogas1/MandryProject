@@ -1,4 +1,5 @@
 ﻿using Mandry.Models.Inheritance;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mandry.Models.DB
 {

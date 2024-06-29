@@ -2,6 +2,12 @@
   "ConnectionStrings": {
     "SqlServer": "your string"
   },
+  "Jwt": {
+    "Issuer": "",
+    "Audience": "",
+    "ExpiresMinuts": ,
+    "JWTKey": ""
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",

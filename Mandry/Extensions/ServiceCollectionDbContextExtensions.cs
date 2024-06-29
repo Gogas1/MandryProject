@@ -13,5 +13,7 @@ namespace Mandry.Extensions
 
             builder.Services.AddDbContext<AirbnbDbContext>(options => options.UseSqlServer(connectionString));
         }
+
+        
     }
 }
