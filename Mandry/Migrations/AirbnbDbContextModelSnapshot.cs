@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mandry.Migrations
 {
-    [DbContext(typeof(AirbnbDbContext))]
+    [DbContext(typeof(MandryDbContext))]
     partial class AirbnbDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

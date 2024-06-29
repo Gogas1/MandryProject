@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mandry.Migrations
 {
-    [DbContext(typeof(AirbnbDbContext))]
+    [DbContext(typeof(MandryDbContext))]
     [Migration("20240627135255_ProfileImageFix")]
     partial class ProfileImageFix
     {

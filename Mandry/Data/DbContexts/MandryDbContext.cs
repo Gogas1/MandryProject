@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Mandry.Data.DbContexts
 {
-    public class AirbnbDbContext : DbContext
+    public class MandryDbContext : DbContext
     {
-        public AirbnbDbContext(DbContextOptions options) : base(options)
+        public MandryDbContext(DbContextOptions options) : base(options)
         {
         }
 

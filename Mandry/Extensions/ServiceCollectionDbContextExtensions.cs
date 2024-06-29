@@ -11,7 +11,7 @@ namespace Mandry.Extensions
             IConfiguration configuration = builder.Configuration;
             string connectionString = configuration.GetConnectionString("SqlServer") ?? throw new Exception("SqlServer connection string is missing");
 
-            builder.Services.AddDbContext<AirbnbDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<MandryDbContext>(options => options.UseSqlServer(connectionString));
         }
 
         

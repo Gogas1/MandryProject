@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Mandry.Migrations
 {
-    [DbContext(typeof(AirbnbDbContext))]
+    [DbContext(typeof(MandryDbContext))]
     [Migration("20240625154939_Initial")]
     partial class Initial
     {

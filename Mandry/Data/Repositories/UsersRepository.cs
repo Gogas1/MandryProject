@@ -7,9 +7,9 @@ namespace Mandry.Data.Repositories
 {
     public class UsersRepository : IUserRepo
     {
-        private readonly AirbnbDbContext _context;
+        private readonly MandryDbContext _context;
 
-        public UsersRepository(AirbnbDbContext context)
+        public UsersRepository(MandryDbContext context)
         {
             _context = context;
         }

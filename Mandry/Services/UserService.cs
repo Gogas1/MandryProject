@@ -10,7 +10,7 @@ namespace Mandry.Services
     {
         private readonly IUserRepo _userRepo;
 
-        public UserService(AirbnbDbContext context, IUserRepo userRepo)
+        public UserService(MandryDbContext context, IUserRepo userRepo)
         {
             _userRepo = userRepo;
         }

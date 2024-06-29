@@ -9,7 +9,7 @@ namespace Mandry.Extensions
         {
             using (var scope = serviceProvider.CreateScope())
             {
-                AirbnbDbContext dbContext = scope.ServiceProvider.GetRequiredService<AirbnbDbContext>();
+                MandryDbContext dbContext = scope.ServiceProvider.GetRequiredService<MandryDbContext>();
                 dbContext.Database.Migrate();
             }
         }
