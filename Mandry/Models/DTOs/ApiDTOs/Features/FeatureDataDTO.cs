@@ -1,6 +1,6 @@
 ﻿namespace Mandry.Models.DTOs.ApiDTOs.Features
 {
-    public class FeatureRequestDataDTO
+    public class FeatureDataDTO
     {
         public string Id { get; set; } = string.Empty;
         public string NameCode { get; set; } = string.Empty;

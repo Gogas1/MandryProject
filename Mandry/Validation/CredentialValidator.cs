@@ -53,7 +53,7 @@ namespace Mandry.Validation
 
             if (string.IsNullOrEmpty(value))
             {
-                errors.Add(new ValidationError("value", "not-empty"));
+                errors.Add(new ValidationError(subject, "not-empty"));
             }
 
             return validationErrors;

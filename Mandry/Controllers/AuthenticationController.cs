@@ -5,6 +5,7 @@ using Mandry.Models.DB;
 using Microsoft.AspNetCore.Mvc;
 using Mandry.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Mandry.Models.Requests.Authentication;
 
 namespace Mandry.Controllers
 {
@@ -24,10 +25,12 @@ namespace Mandry.Controllers
         }
 
         [HttpPost("phone")]
-        public async Task<IActionResult> LoginUserUsingPhone(string phone/*, string password*/)
+        public async Task<IActionResult> LoginUserUsingPhone([FromBody] PhoneModel model)
         {
             try
             {
+                string phone = model.Phone;
+
                 ValidationErrors phoneErrors = _credentialValidator.ValidateNotNull(phone, "phone");
                 //ValidationErrors passwordErrors = _credentialValidator.ValidateNotNull(password, "password");
 
@@ -63,7 +66,7 @@ namespace Mandry.Controllers
                     UserData = new UserDataDTO()
                     {
                         Name = user.Name,
-                        Email = user.Email,
+                        Email = user.Email ?? string.Empty,
                         Id = user.Id.ToString(),
                         Surname = user.Surname,
                     }
@@ -77,10 +80,12 @@ namespace Mandry.Controllers
         }
       
         [HttpPost("email")]
-        public async Task<IActionResult> LoginUserUsingEmailAndPassword(string email, string password)
+        public async Task<IActionResult> LoginUserUsingEmailAndPassword([FromBody] EmailPasswordModel model)
         {
             try
             {
+                string email = model.Email;
+                string password = model.Password;
                 ValidationErrors emailErrors = _credentialValidator.ValidateNotNull(email, "email");
                 ValidationErrors passwordErrors = _credentialValidator.ValidateNotNull(password, "password");
 
@@ -116,11 +121,11 @@ namespace Mandry.Controllers
                 {
                     IsSuccess = true,
                     Token = token,
-                    Email = user.Email,
+                    Email = user.Email ?? string.Empty,
                     UserData = new UserDataDTO()
                     {
                         Name = user.Name,
-                        Email = user.Email,
+                        Email = user.Email ?? string.Empty,
                         Id = user.Id.ToString(),
                         Surname = user.Surname,
                     }

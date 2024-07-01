@@ -5,6 +5,7 @@ using Mandry.ApiResponses.Account;
 using Mandry.Interfaces.Validation;
 using Mandry.Interfaces.Helpers;
 using Microsoft.AspNetCore.Identity;
+using Mandry.Models.Requests.Account;
 
 namespace Mandry.Controllers
 {
@@ -29,8 +30,15 @@ namespace Mandry.Controllers
         }
 
         [HttpPost("auth/signup")]
-        public async Task<IActionResult> SignUp(string name, string surname, string phone, string email, string password, DateTime birthDate)
+        public async Task<IActionResult> SignUp([FromBody] SignupModel model)
         {
+            string name = model.Name;
+            string surname = model.Surname;
+            string phone = model.Phone;
+            string email = model.Email;
+            string password = model.Password;
+            DateTime birthDate = model.BirthDate;
+
             try
             {
                 ValidationErrors nameErrors = _credentialValidator.ValidateNotNull(name, "name");
@@ -72,9 +80,9 @@ namespace Mandry.Controllers
                         IsAccountExisting = true,
                         ObfuscatedUserData = new SignUpObfuscatedUserData()
                         {
-                            Email = _stringObfuscator.ObfuscateEmail(user.Email),
+                            Email = _stringObfuscator.ObfuscateEmail(user.Email ?? string.Empty),
                             Name = user.Name,
-                            Phone = _stringObfuscator.ObfuscatePhone(user.Phone),
+                            Phone = _stringObfuscator.ObfuscatePhone(user.Phone ?? string.Empty),
                         }
                     });
                 }

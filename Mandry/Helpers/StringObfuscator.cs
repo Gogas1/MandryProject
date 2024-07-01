@@ -8,7 +8,7 @@ namespace Mandry.Helpers
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentException("Email cannot be null or empty", nameof(email));
+                return "";
             }
 
             var emailParts = email.Split('@');
@@ -35,7 +35,7 @@ namespace Mandry.Helpers
         {
             if (string.IsNullOrEmpty(phone))
             {
-                throw new ArgumentException("Phone number cannot be null or empty", nameof(phone));
+                return "";
             }
             
             string cleanedPhone = string.Concat(phone.Where(char.IsDigit));

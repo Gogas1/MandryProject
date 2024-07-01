@@ -8,6 +8,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.SetupSqlServerDbContext();
 
 builder.Services.AddCredentialValidator();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+    options.AddPolicy("AllowAll",
+            builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+});
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();
@@ -41,6 +59,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
 
 app.Services.DbMigration();
 
