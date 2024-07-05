@@ -14,6 +14,12 @@ namespace Mandry.Extensions
             builder.Services.AddDbContext<MandryDbContext>(options => options.UseSqlServer(connectionString));
         }
 
-        
+        public static void SetupPostgresDbContext(this WebApplicationBuilder builder)
+        {
+            IConfiguration configuration = builder.Configuration;
+            string connectionString = configuration.GetConnectionString("Postgres") ?? throw new Exception("Postgres connection string is missing");
+
+            builder.Services.AddDbContext<MandryDbContext>(options => options.UseNpgsql(connectionString));
+        }
     }
 }

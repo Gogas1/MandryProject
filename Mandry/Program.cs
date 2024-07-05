@@ -5,7 +5,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.SetupSqlServerDbContext();
+//builder.SetupSqlServerDbContext();
+builder.SetupPostgresDbContext();
 
 builder.Services.AddCredentialValidator();
 builder.Services.AddCors(options =>
@@ -60,7 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAll");
 
 app.Services.DbMigration();
 
