@@ -3,6 +3,7 @@ using Mandry.Interfaces.Validation;
 using Mandry.Models.DTOs.ApiDTOs.Features;
 using Microsoft.AspNetCore.Mvc;
 using Mandry.ApiResponses.Feature;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Mandry.Controllers
 {
@@ -17,8 +18,9 @@ namespace Mandry.Controllers
             _dataValidator = dataValidator;
         }
 
+        [Authorize]
         [HttpPost("/f/create")]
-        public async Task<IActionResult> CreateFeature(FeatureDataDTO featureData)
+        public async Task<IActionResult> CreateFeature([FromBody] FeatureDataDTO featureData)
         {
             try
             {
@@ -42,12 +44,13 @@ namespace Mandry.Controllers
                 });
             }
             catch (Exception ex)
-            {
+            {                
                 return StatusCode(500, ex.Message);
             }
             
         }
 
+        [HttpGet("/f/all")]
         public async Task<IActionResult> RequestFeatures()
         {
             try

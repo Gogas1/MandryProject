@@ -12,5 +12,10 @@ namespace Mandry.Extensions
 
             services.AddScoped<ICredentialValidator, CredentialValidator>(provider => new CredentialValidator(options));
         }
+
+        public static void AddDataValidation(this IServiceCollection services)
+        {
+            services.AddScoped<IDataValidator, DataValidator>();
+        }
     }
 }

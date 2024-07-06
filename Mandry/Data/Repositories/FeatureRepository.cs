@@ -1,6 +1,7 @@
 ﻿using Mandry.Data.DbContexts;
 using Mandry.Interfaces.Repositories;
 using Mandry.Models.DB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mandry.Data.Repositories
 {
@@ -13,14 +14,24 @@ namespace Mandry.Data.Repositories
             _context = dbContext;
         }
 
-        public Task<Feature> CreateFeatureAsync(Feature feature)
+        public async Task<Feature> CreateFeatureAsync(Feature feature)
         {
-            throw new NotImplementedException();
+            _context.Add(feature);
+            await _context.SaveChangesAsync();
+
+            return feature;
         }
 
         public Task<ICollection<Feature>> GetAllFeaturesAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ICollection<Feature>> GetAllFeaturesWithTranslations()
+        {
+            return await _context.Features
+                .Include(f => f.Translation)
+                .ToListAsync();
         }
     }
 }

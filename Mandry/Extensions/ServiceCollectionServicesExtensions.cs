@@ -9,6 +9,7 @@ namespace Mandry.Extensions
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFeatureService, FeatureService>();
         }
     }
 }

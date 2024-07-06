@@ -6,5 +6,6 @@ namespace Mandry.Interfaces.Repositories
     {
         Task<Feature> CreateFeatureAsync(Feature feature);
         Task<ICollection<Feature>> GetAllFeaturesAsync();
+        Task<ICollection<Feature>> GetAllFeaturesWithTranslations();
     }
 }

@@ -11,6 +11,6 @@
         public bool IsAllowCustomDescription { get; set; }
         public bool IsHouseRule { get; set; }
 
-        public TranslationDTO Translations { get; set; } = new TranslationDTO();
+        public ICollection<TranslationDTO> Translations { get; set; } = new List<TranslationDTO>();
     }
 }

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.SetupPostgresDbContext();
 
 builder.Services.AddCredentialValidator();
+builder.Services.AddDataValidation();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
