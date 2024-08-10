@@ -1,6 +1,7 @@
 {
   "ConnectionStrings": {
-    "SqlServer": "your string"
+    "SqlServer": "your string",
+    "Postgres": "string"
   },
   "Jwt": {
     "Issuer": "",
