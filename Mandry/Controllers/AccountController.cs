@@ -59,7 +59,7 @@ namespace Mandry.Controllers
                     });
                 }
 
-                if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone))
+                if ((string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email)) && string.IsNullOrEmpty(phone))
                 {
                     ValidationErrors passwordErrors = _credentialValidator.ValidatePassword(password);
                     ValidationErrors emailErrors = _credentialValidator.ValidateEmail(email);
