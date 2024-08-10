@@ -37,5 +37,6 @@ namespace Mandry.Interfaces.Services
         /// <returns>Created user</returns>
         Task<User> CreateUser(string firstName, string surname, string password, DateTime birthDate, string? email = null, string? phone = null);
         Task<User> CreateUserAsync(User user);
+        Task<User?> GetBasicUserByIdAsync(string id);
     }
 }

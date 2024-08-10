@@ -30,6 +30,11 @@ namespace Mandry.Services
             return await _userRepo.FindUserByEmailAsync(email);
         }
 
+        public async Task<User?> GetBasicUserByIdAsync(string id)
+        {
+            return await _userRepo.FindUserById(Guid.Parse(id));
+        }
+
         public async Task<User?> GetBasicUserByPhoneAsync(string phone)
         {
             return await _userRepo.FindUserByPhoneAsync(phone);

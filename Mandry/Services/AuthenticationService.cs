@@ -20,7 +20,7 @@ namespace Mandry.Services
         public string GetJwtFor(User user)
         {
             var config = _config.GetSection("Jwt");
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Name) };
+            var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.Name, user.Name), new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()) };
 
             var jwt = new JwtSecurityToken(
                 issuer: config["Issuer"] ?? throw new Exception("Issuer in not specified"),
