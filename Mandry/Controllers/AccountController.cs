@@ -6,6 +6,9 @@ using Mandry.Interfaces.Validation;
 using Mandry.Interfaces.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Mandry.Models.Requests.Account;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Mandry.Controllers
 {
@@ -56,7 +59,7 @@ namespace Mandry.Controllers
                     });
                 }
 
-                if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email) && string.IsNullOrEmpty(phone))
+                if ((string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email)) && string.IsNullOrEmpty(phone))
                 {
                     ValidationErrors passwordErrors = _credentialValidator.ValidatePassword(password);
                     ValidationErrors emailErrors = _credentialValidator.ValidateEmail(email);
@@ -123,6 +126,41 @@ namespace Mandry.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        [Authorize]
+        [HttpGet("data")]
+        public async Task<IActionResult> GetUserData()
+        {
+            var user = HttpContext.User;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(userId != null) 
+            {
+                var targetUser = await _userService.GetBasicUserByIdAsync(userId);
+
+                if(targetUser == null) 
+                {
+                    GetUserDataResponse response = new GetUserDataResponse();
+                    response.UserDoesNoExist = true;
+                    return NotFound(response);
+                }
+                else
+                {
+                    GetUserDataResponse response = new GetUserDataResponse();
+                    response.UserData = new Models.DTOs.UserDataDTO();
+
+                    response.UserData.Id = targetUser.Id.ToString();
+                    response.UserData.Name = targetUser.Name;
+                    response.UserData.Surname = targetUser.Surname;
+                    response.UserData.Phone = targetUser.Phone ?? string.Empty;
+                    response.UserData.Email = targetUser.Email ?? string.Empty;
+                    
+                    return Ok(response);
+                }         
+            }
+
+            return Unauthorized();
         }
     }
 }
