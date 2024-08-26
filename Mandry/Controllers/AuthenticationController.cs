@@ -32,13 +32,11 @@ namespace Mandry.Controllers
                 string phone = model.Phone;
 
                 ValidationErrors phoneErrors = _credentialValidator.ValidateNotNull(phone, "phone");
-                //ValidationErrors passwordErrors = _credentialValidator.ValidateNotNull(password, "password");
 
-                if (!phoneErrors.IsValid/* || !passwordErrors.IsValid*/)
+                if (!phoneErrors.IsValid)
                 {
                     List<ValidationErrors> validationErrors = new List<ValidationErrors>();
                     if (!phoneErrors.IsValid) validationErrors.Add(phoneErrors);
-                    //if (!passwordErrors.IsValid) validationErrors.Add(passwordErrors);
 
                     return BadRequest(new LoginUserUsingPhoneResponse()
                     {

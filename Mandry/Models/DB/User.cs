@@ -11,7 +11,8 @@ namespace Mandry.Models.DB
         public string? Email { get; set; } = string.Empty;
         public DateOnly BirthDate { get; set; }
         public string? PasswordHash { get; set; } = string.Empty;
-        public bool IsOwner {  get; set; }
+        public bool IsOwner { get; set; }
+        public bool IsAgreementAccepted { get; set; }
 
         public Image? ProfileImage {  get; set; }
         public ICollection<Availability> Availability { get; set; } = new List<Availability>();

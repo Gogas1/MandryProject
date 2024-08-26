@@ -162,5 +162,33 @@ namespace Mandry.Controllers
 
             return Unauthorized();
         }
+
+        [Authorize]
+        [HttpGet("agreement")]
+        public async Task<IActionResult> GetUserAgreementAcceptance()
+        {
+            var user = HttpContext.User;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(userId != null) 
+            {
+                var targetUser = await _userService.GetBasicUserByIdAsync(userId);
+
+                if(targetUser == null)
+                {
+                    GetUserAgreementAcceptanceResponse response = new GetUserAgreementAcceptanceResponse();
+                    response.IsAgreementAccepted = false;
+                    return NotFound(response);
+                }
+                else
+                {
+                    GetUserAgreementAcceptanceResponse response = new GetUserAgreementAcceptanceResponse();
+                    response.IsAgreementAccepted = targetUser.IsAgreementAccepted;
+                    return Ok(response);
+                }
+            }
+
+            return Unauthorized();
+        }
     }
 }
