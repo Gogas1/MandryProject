@@ -25,6 +25,7 @@ namespace Mandry.Data.DbContexts
         public DbSet<ParameterFeatureHousing> ParameterFeatureHousings { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Translation> Translations { get; set; }
+        public DbSet<Destination> Destinations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -9,6 +9,7 @@ namespace Mandry.Extensions
         {
             services.AddScoped<IUserRepo, UsersRepository>();
             services.AddScoped<IFeatureRepository, FeatureRepository>();
+            services.AddScoped<IDestinationRepository, DestinationRepository>();
         }
     }
 }
