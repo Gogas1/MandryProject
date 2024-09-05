@@ -6,5 +6,6 @@ namespace Mandry.Interfaces.Services
     {
         Task<FeatureDataDTO> CreateFeatureAsync(FeatureDataDTO featureData);
         Task<ICollection<FeatureDataDTO>> GetFeaturesAsync();
+        Task PurgeFeatures();
     }
 }

@@ -11,6 +11,7 @@ namespace Mandry.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFeatureService, FeatureService>();
             services.AddScoped<IDestinationService, DestinationService>();
+            services.AddScoped<ICategoryService, CategoryService>();
         }
     }
 }

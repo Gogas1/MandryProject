@@ -22,6 +22,14 @@ namespace Mandry.Data.Repositories
             return feature;
         }
 
+        public async Task DeleteFeatures()
+        {
+            var features = await _context.Features.ToListAsync();
+            _context.Features.RemoveRange(features);
+
+            await _context.SaveChangesAsync();
+        }
+
         public Task<ICollection<Feature>> GetAllFeaturesAsync()
         {
             throw new NotImplementedException();

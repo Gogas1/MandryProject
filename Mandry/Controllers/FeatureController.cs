@@ -18,7 +18,7 @@ namespace Mandry.Controllers
             _dataValidator = dataValidator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("/f/create")]
         public async Task<IActionResult> CreateFeature([FromBody] FeatureDataDTO featureData)
         {
@@ -66,6 +66,14 @@ namespace Mandry.Controllers
             {
                 return StatusCode(500, ex.Message);
             }            
+        }
+
+        [HttpPost("/f/delete-all")]
+        public async Task<IActionResult> PurgeFeatures()
+        {
+            await _featureService.PurgeFeatures();
+
+            return Ok();
         }
     }
 }

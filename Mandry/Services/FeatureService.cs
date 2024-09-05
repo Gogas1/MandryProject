@@ -25,6 +25,7 @@ namespace Mandry.Services
             newFeature.IsAllowPinning = featureData.IsAllowPinning;
             newFeature.IsHouseRule = featureData.IsHouseRule;
             newFeature.IsRecomended = featureData.IsHouseRule;
+            newFeature.FeatureIcon = featureData.FeatureIcon;
             newFeature.Translation = featureData.Translations.Select(t => new Translation()
             {
                 Language = t.LanguageCode,
@@ -43,6 +44,7 @@ namespace Mandry.Services
                 IsAllowPinning = newFeature.IsAllowPinning,
                 IsHouseRule = newFeature.IsHouseRule,
                 IsRecommended = newFeature.IsRecomended,
+                FeatureIcon = newFeature.FeatureIcon,
                 Translations = newFeature.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();
@@ -69,6 +71,7 @@ namespace Mandry.Services
                 featureDataDTO.IsHouseRule = f.IsHouseRule;
                 featureDataDTO.IsRecommended = f.IsRecomended;
                 featureDataDTO.IsAllowPinning = f.IsAllowPinning;
+                featureDataDTO.FeatureIcon = f.FeatureIcon;
                 featureDataDTO.Translations = f.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();
@@ -83,6 +86,11 @@ namespace Mandry.Services
             }).ToList();
 
             return featuresDTO;
+        }
+
+        public async Task PurgeFeatures()
+        {
+            await _featureRepository.DeleteFeatures();
         }
     }
 }
