@@ -7,6 +7,7 @@ namespace Mandry.Models.DB
     {
         public string NameKey { get; set; } = string.Empty;
         public string DescriptionKey { get; set; } = string.Empty;
+        public string TypeKey { get; set; } = string.Empty;
         public bool IsAllowPinning { get; set; }
         public bool IsRecomended { get; set; }
         public bool IsAllowCustomName { get; set; }
@@ -16,5 +17,6 @@ namespace Mandry.Models.DB
 
         public ICollection<Parameter> Parameters { get; set; } = new List<Parameter>();
         public ICollection<FeatureHousing> FeatureHousing { get; set; } = new List<FeatureHousing>();
+
     }
 }

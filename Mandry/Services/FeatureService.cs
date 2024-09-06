@@ -26,6 +26,7 @@ namespace Mandry.Services
             newFeature.IsHouseRule = featureData.IsHouseRule;
             newFeature.IsRecomended = featureData.IsHouseRule;
             newFeature.FeatureIcon = featureData.FeatureIcon;
+            newFeature.TypeKey = featureData.TypeCode;
             newFeature.Translation = featureData.Translations.Select(t => new Translation()
             {
                 Language = t.LanguageCode,
@@ -45,6 +46,7 @@ namespace Mandry.Services
                 IsHouseRule = newFeature.IsHouseRule,
                 IsRecommended = newFeature.IsRecomended,
                 FeatureIcon = newFeature.FeatureIcon,
+                TypeCode = newFeature.TypeKey,
                 Translations = newFeature.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();
@@ -72,6 +74,7 @@ namespace Mandry.Services
                 featureDataDTO.IsRecommended = f.IsRecomended;
                 featureDataDTO.IsAllowPinning = f.IsAllowPinning;
                 featureDataDTO.FeatureIcon = f.FeatureIcon;
+                featureDataDTO.TypeCode = f.TypeKey;
                 featureDataDTO.Translations = f.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();
