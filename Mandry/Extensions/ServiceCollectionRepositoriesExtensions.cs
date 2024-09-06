@@ -11,6 +11,7 @@ namespace Mandry.Extensions
             services.AddScoped<IFeatureRepository, FeatureRepository>();
             services.AddScoped<IDestinationRepository, DestinationRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
         }
     }
 }

@@ -4,6 +4,8 @@ using Mandry.Models.DTOs.ApiDTOs.Features;
 using Microsoft.AspNetCore.Mvc;
 using Mandry.ApiResponses.Feature;
 using Microsoft.AspNetCore.Authorization;
+using Mandry.Models.Requests.Feature;
+using Mandry.Models.DB;
 
 namespace Mandry.Controllers
 {
@@ -11,11 +13,13 @@ namespace Mandry.Controllers
     {
         private readonly IFeatureService _featureService;
         private readonly IDataValidator _dataValidator;
+        private readonly IImageService _imageService;
 
-        public FeatureController(IFeatureService featureService, IDataValidator dataValidator)
+        public FeatureController(IFeatureService featureService, IDataValidator dataValidator, IImageService imageService)
         {
             _featureService = featureService;
             _dataValidator = dataValidator;
+            _imageService = imageService;
         }
 
         //[Authorize]
@@ -74,6 +78,19 @@ namespace Mandry.Controllers
             await _featureService.PurgeFeatures();
 
             return Ok();
+        }
+
+        [HttpPost("/f/safe-image")]
+        public async Task<IActionResult> SaveFeatureImage([FromForm] FeatureImageModel model)
+        {
+            if (model.File == null || model.File.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            Image image = await _imageService.SaveImage(model.File, "images/features/");
+
+            return Ok(new SafeFeatureImageResponse() { Image = image });
         }
     }
 }

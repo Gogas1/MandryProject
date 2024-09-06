@@ -54,6 +54,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.SetupSwagger();
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
