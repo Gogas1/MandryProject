@@ -14,9 +14,11 @@ namespace Mandry.Models.DB
         public bool IsAllowCustomDescription { get; set; }
         public bool IsHouseRule { get; set; }
         public string FeatureIcon { get; set; } = string.Empty;
+        public bool IsCounterFeature { get; set; }
 
 
         public Image FeatureImage { get; set; }
+        public Feature? CounterFeature { get; set; }
         public ICollection<Parameter> Parameters { get; set; } = new List<Parameter>();
         public ICollection<FeatureHousing> FeatureHousing { get; set; } = new List<FeatureHousing>();
 

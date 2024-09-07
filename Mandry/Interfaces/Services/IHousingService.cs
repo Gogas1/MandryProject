@@ -6,5 +6,6 @@ namespace Mandry.Interfaces.Services
     {
         Task<Housing> SaveHousingAsync(Housing housing);
         Task<Housing?> GetHousingByIdAsync(string id);
+        Task<List<Housing>> GetHousingListAsync();
     }
 }

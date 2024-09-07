@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240907124938_Changes2")]
+    partial class Changes2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,10 +233,6 @@ namespace Mandry.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OneLineDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
 
@@ -242,6 +241,10 @@ namespace Mandry.Migrations
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
 

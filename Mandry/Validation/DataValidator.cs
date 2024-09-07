@@ -16,10 +16,10 @@ namespace Mandry.Validation
                 errors.Add(new ValidationError("nameCode", "not-empty"));
             }
 
-            if (string.IsNullOrEmpty(featureData.DescriptionCode))
-            {
-                errors.Add(new ValidationError("descriptionCode", "not-empty"));
-            }
+            //if (string.IsNullOrEmpty(featureData.DescriptionCode))
+            //{
+            //    errors.Add(new ValidationError("descriptionCode", "not-empty"));
+            //}
 
             if (!featureData.Translations.Any())
             {

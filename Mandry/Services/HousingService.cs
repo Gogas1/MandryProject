@@ -18,6 +18,11 @@ namespace Mandry.Services
             return await _housingRepository.GetHousingByIdAsync(Guid.Parse(id));
         }
 
+        public async Task<List<Housing>> GetHousingListAsync()
+        {
+            return await _housingRepository.GetAll();
+        }
+
         public async Task<Housing> SaveHousingAsync(Housing housing)
         {
             return await _housingRepository.CreateHousingAsync(housing);

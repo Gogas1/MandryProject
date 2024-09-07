@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240907130752_ChangesHousing1")]
+    partial class ChangesHousing1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,34 +207,24 @@ namespace Mandry.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("CategoryProperty")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LocationCoords")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LocationCountry")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LocationPlace")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MaxGuests")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OneLineDescription")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("OwnerId")
@@ -242,7 +235,9 @@ namespace Mandry.Migrations
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("ShortDescription")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

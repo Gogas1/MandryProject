@@ -25,8 +25,11 @@ namespace Mandry.Services
             newFeature.IsAllowPinning = featureData.IsAllowPinning;
             newFeature.IsHouseRule = featureData.IsHouseRule;
             newFeature.IsRecomended = featureData.IsHouseRule;
-            newFeature.FeatureIcon = featureData.FeatureIcon;
             newFeature.TypeKey = featureData.TypeCode;
+            newFeature.FeatureImage = new Image()
+            {
+                Id = Guid.Parse(featureData.FeatureIcon.Id),                
+            };
             newFeature.Translation = featureData.Translations.Select(t => new Translation()
             {
                 Language = t.LanguageCode,
@@ -45,8 +48,12 @@ namespace Mandry.Services
                 IsAllowPinning = newFeature.IsAllowPinning,
                 IsHouseRule = newFeature.IsHouseRule,
                 IsRecommended = newFeature.IsRecomended,
-                FeatureIcon = newFeature.FeatureIcon,
                 TypeCode = newFeature.TypeKey,
+                FeatureIcon = new ImageDTO()
+                {
+                    Id = newFeature.FeatureImage.Id.ToString(),
+                    Src = newFeature.FeatureImage.Src,
+                },
                 Translations = newFeature.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();
@@ -73,8 +80,12 @@ namespace Mandry.Services
                 featureDataDTO.IsHouseRule = f.IsHouseRule;
                 featureDataDTO.IsRecommended = f.IsRecomended;
                 featureDataDTO.IsAllowPinning = f.IsAllowPinning;
-                featureDataDTO.FeatureIcon = f.FeatureIcon;
                 featureDataDTO.TypeCode = f.TypeKey;
+                featureDataDTO.FeatureIcon = new ImageDTO()
+                {
+                    Id = f.FeatureImage.Id.ToString(),
+                    Src = f.FeatureImage.Src,
+                };
                 featureDataDTO.Translations = f.Translation.Select(t =>
                 {
                     TranslationDTO translationDTO = new TranslationDTO();

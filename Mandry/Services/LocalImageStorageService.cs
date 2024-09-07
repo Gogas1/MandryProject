@@ -30,7 +30,7 @@ namespace Mandry.Services
                 await file.CopyToAsync(stream);
             }
 
-            return filePath;
+            return Path.Combine(subDirectory, file.FileName);
         }
     }
 }

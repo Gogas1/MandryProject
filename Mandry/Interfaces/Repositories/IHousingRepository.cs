@@ -6,5 +6,6 @@ namespace Mandry.Interfaces.Repositories
     {
         Task<Housing> CreateHousingAsync(Housing housing);
         Task<Housing?> GetHousingByIdAsync(Guid id);
+        Task<List<Housing>> GetAll();
     }
 }

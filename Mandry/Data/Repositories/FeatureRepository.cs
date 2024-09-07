@@ -16,6 +16,7 @@ namespace Mandry.Data.Repositories
 
         public async Task<Feature> CreateFeatureAsync(Feature feature)
         {
+            _context.Attach(feature.FeatureImage);
             _context.Add(feature);
             await _context.SaveChangesAsync();
 
@@ -39,6 +40,7 @@ namespace Mandry.Data.Repositories
         {
             return await _context.Features
                 .Include(f => f.Translation)
+                .Include(f => f.FeatureImage)
                 .ToListAsync();
         }
     }
