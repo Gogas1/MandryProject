@@ -26,6 +26,7 @@ namespace Mandry.Data.DbContexts
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<Destination> Destinations { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,18 @@ namespace Mandry.Data.DbContexts
                 property.SetPrecision(18);
                 property.SetScale(2);
             }
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.From)
+                .WithMany(u => u.ReviewsCreated)
+                .HasForeignKey(r => r.FromId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.To)
+                .WithMany(u => u.ReviewsReceived)
+                .HasForeignKey(r => r.ToId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

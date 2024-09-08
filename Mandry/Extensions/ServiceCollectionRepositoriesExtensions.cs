@@ -13,6 +13,7 @@ namespace Mandry.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IHousingRepository, HousingRepository>();
+            services.AddScoped<IReviewsRepository, ReviewsRepository>();
         }
     }
 }

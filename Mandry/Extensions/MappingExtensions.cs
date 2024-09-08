@@ -5,6 +5,10 @@ using Mandry.Models.Requests.Housing;
 using Mandry.Models.DTOs.ApiDTOs.Features;
 using Mandry.Models.Requests.Parameters;
 using Mandry.Models.Requests.Feature;
+using Mandry.Models.Requests.Reviews;
+using Mandry.Models.DTOs.ApiDTOs.Reviews;
+using Mandry.Models.DTOs;
+using Azure;
 
 namespace Mandry.Extensions
 {
@@ -47,6 +51,7 @@ namespace Mandry.Extensions
                     featureDTO.IsAllowCustomName = fh.Feature.IsAllowCustomName;
                     featureDTO.IsAllowCustomDescription = fh.Feature.IsAllowCustomDescription;
                     featureDTO.IsHouseRule = fh.Feature.IsHouseRule;
+                    featureDTO.IsSafetyFeature = fh.Feature.IsSafetyFeature;
                     featureDTO.FeatureIcon = new ImageDTO() { Id = fh.Feature.FeatureImage.Id.ToString(), Src = fh.Feature.FeatureImage.Src };
                     featureDTO.Translations = fh.Feature.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString }).ToList();
                     featureDTO.Parameters = fh.ParametersValues.Select(pv =>
@@ -319,5 +324,52 @@ namespace Mandry.Extensions
         }
 
         #endregion Features
+
+        #region Reviews
+
+        public static Review ToReview(this AddReviewModel model)
+        {
+            Review review = new Review();
+            review.Rating = model.Rating;
+            review.Text = model.Text;
+
+            return review;
+        }
+
+        public static ReviewDTO ToDTO(this Review review)
+        {
+            ReviewDTO reviewDTO = new ReviewDTO();
+            reviewDTO.Creator = review.From.ToDTO(false);
+            reviewDTO.Text = review.Text;
+            reviewDTO.Rating = review.Rating;            
+
+            return reviewDTO;
+        }
+
+        #endregion
+
+        #region User
+
+        public static UserDataDTO ToDTO(this User user, bool detailed = true)
+        {
+            UserDataDTO userData = new UserDataDTO();
+            userData.Id = user.Id.ToString();
+            userData.Name = user.Name;
+            userData.Surname = user.Surname;
+            if (user.ProfileImage != null)
+            {
+                userData.Avatar = new ImageDTO() { Src = user.ProfileImage.Src, Id = user.ProfileImage.Id.ToString() };
+            }
+
+            if(detailed)
+            {
+                userData.Phone = user.Phone ?? string.Empty;
+                userData.Email = user.Email ?? string.Empty;
+            }            
+
+            return userData;
+        }
+
+        #endregion User
     }
 }

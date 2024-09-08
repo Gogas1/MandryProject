@@ -11,5 +11,7 @@ namespace Mandry.Interfaces.Repositories
         Task<User?> FindUserByEmailAsync(string email);
         Task<User?> FindUserByPhoneAndEmailAsync(string phone, string email);
         Task<User?> FindUserByPhoneAsync(string phone);
+        Task<User?> FindUserByIdWithReviewsAsync(Guid id);
+        Task<bool> IsExistingById(Guid id);
     }
 }

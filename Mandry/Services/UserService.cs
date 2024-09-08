@@ -25,6 +25,15 @@ namespace Mandry.Services
             return await _userRepo.CreateUserAsync(user);
         }
 
+        public async Task EvaluateUserRating(string id)
+        {
+            User? user = await _userRepo.FindUserByIdWithReviewsAsync(Guid.Parse(id));
+            if (user == null) return;
+
+            user.AverageRating = user.ReviewsReceived.Average(r => r.Rating);
+            await _userRepo.UpdateUser(user);
+        }
+
         public async Task<User?> GetBasicUserByEmailAsync(string email)
         {
             return await _userRepo.FindUserByEmailAsync(email);
@@ -43,6 +52,11 @@ namespace Mandry.Services
         public async Task<User?> GetBasicUserByPhoneOrEmailAsync(string phone, string email)
         {
             return await _userRepo.FindUserByPhoneAndEmailAsync(phone, email);
+        }
+
+        public async Task<bool> IsUserExistAsync(string id)
+        {
+            return await _userRepo.IsExistingById(Guid.Parse(id));
         }
     }
 }

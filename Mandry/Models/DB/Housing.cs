@@ -14,6 +14,7 @@
         public string LocationCoords { get; set; }
         public int MaxGuests { get; set; }
         public int Bathrooms { get; set; }
+        public float AverageRating { get; set; }
 
         public User Owner { get; set; }
         public Category Category { get; set; }
@@ -22,6 +23,7 @@
         public ICollection<FeatureHousing> FeatureHousings { get; set; } = new List<FeatureHousing>();
         public ICollection<AccessbilityFeatureHousing> AccessbilitiyFeatureHousings { get; set; } = new List<AccessbilityFeatureHousing>();
         public ICollection<Bedroom> Bedrooms { get; set; } = new List<Bedroom>();
-        public ICollection<Image> Images { get; set; } = new List<Image>(); 
+        public ICollection<Image> Images { get; set; } = new List<Image>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

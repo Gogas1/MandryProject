@@ -15,6 +15,7 @@ namespace Mandry.Extensions
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageStorageService, LocalImageStorageService>();
             services.AddScoped<IHousingService, HousingService>();
+            services.AddScoped<IReviewService, ReviewService>();
         }
     }
 }

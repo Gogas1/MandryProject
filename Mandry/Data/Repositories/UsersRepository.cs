@@ -32,6 +32,13 @@ namespace Mandry.Data.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<User?> FindUserByIdWithReviewsAsync(Guid id)
+        {
+            return await _context.Users
+                .Include(u => u.ReviewsReceived)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<User?> FindUserByName(string name)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Name == name);
@@ -47,8 +54,13 @@ namespace Mandry.Data.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Phone == phone);
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<bool> IsExistingById(Guid id)
         {
+            return await _context.Users.AnyAsync(u => u.Id == id);
+        }
+
+        public async Task<User> UpdateUser(User user)
+        {           
             _context.Update(user);
             await _context.SaveChangesAsync();
 

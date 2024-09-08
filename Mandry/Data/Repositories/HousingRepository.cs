@@ -61,6 +61,24 @@ namespace Mandry.Data.Repositories
                 .FirstAsync(h => h.Id == id);
         }
 
+        public async Task<float> GetHousingAverageRating(Guid id)
+        {
+            var ratings = await _dbContext.Reviews
+                .Where(r => r.HousingTo.Id == id)
+                .Select(r => r.Rating)
+                .ToListAsync();
+
+            if (ratings.Any())
+            {
+                var averageRating = ratings.Average();                
+                return averageRating;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public async Task<List<Housing>> GetAll()
         {
             return await _dbContext.Housings
@@ -76,6 +94,17 @@ namespace Mandry.Data.Repositories
                     Bedrooms = h.Bedrooms
             })
             .ToListAsync();
+        }
+
+        public async Task<bool> IsHousingExistingByIdAsync(Guid id)
+        {
+            return await _dbContext.Housings.AnyAsync(h => h.Id == id);
+        }
+
+        public async Task UpdateHousing(Housing housing)
+        {
+            _dbContext.Update(housing);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

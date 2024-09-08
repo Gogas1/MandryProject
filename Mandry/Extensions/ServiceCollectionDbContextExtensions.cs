@@ -19,7 +19,7 @@ namespace Mandry.Extensions
             IConfiguration configuration = builder.Configuration;
             string connectionString = configuration.GetConnectionString("Postgres") ?? throw new Exception("Postgres connection string is missing");
 
-            builder.Services.AddDbContext<MandryDbContext>(options => options.UseNpgsql(connectionString));
+            builder.Services.AddDbContext<MandryDbContext>(options => options.UseNpgsql(connectionString).EnableSensitiveDataLogging());
         }
     }
 }

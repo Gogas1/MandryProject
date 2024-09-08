@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240908210712_Reviews")]
+    partial class Reviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,7 +343,7 @@ namespace Mandry.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("FromId")
+                    b.Property<Guid>("FromId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("HousingToId")
@@ -353,7 +356,7 @@ namespace Mandry.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ToId")
+                    b.Property<Guid>("ToId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -754,7 +757,8 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.User", "From")
                         .WithMany("ReviewsCreated")
                         .HasForeignKey("FromId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Mandry.Models.DB.Housing", "HousingTo")
                         .WithMany("Reviews")
@@ -765,7 +769,8 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.User", "To")
                         .WithMany("ReviewsReceived")
                         .HasForeignKey("ToId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("From");
 
