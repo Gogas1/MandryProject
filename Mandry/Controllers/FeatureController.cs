@@ -24,7 +24,7 @@ namespace Mandry.Controllers
 
         //[Authorize]
         [HttpPost("/f/create")]
-        public async Task<IActionResult> CreateFeature([FromBody] FeatureDataDTO featureData)
+        public async Task<IActionResult> CreateFeature([FromBody] AddFeatureModel featureData)
         {
             try
             {
@@ -39,11 +39,11 @@ namespace Mandry.Controllers
                     });
                 }
 
-                featureData = await _featureService.CreateFeatureAsync(featureData);
+                var newFeature = await _featureService.CreateFeatureAsync(featureData);
 
                 return Ok(new CreateFeatureResponse
                 {
-                    FeatureData = featureData,
+                    FeatureData = newFeature,
                     Success = true,
                 });
             }
@@ -91,6 +91,20 @@ namespace Mandry.Controllers
             Image image = await _imageService.SaveImage(model.File, "images/features/");
 
             return Ok(new SafeFeatureImageResponse() { Image = image });
+        }
+
+        [HttpPost("/f/delete/{id}")]
+        public async Task<IActionResult> DeleteFeature(string id)
+        {
+            try
+            {
+                await _featureService.DeleteFeature(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using Mandry.Interfaces.Validation;
 using Mandry.Models.DTOs.ApiDTOs.Categories;
 using Mandry.Models.DTOs.ApiDTOs.Features;
+using Mandry.Models.Requests.Feature;
 
 namespace Mandry.Validation
 {
     public class DataValidator : IDataValidator
     {
-        public ValidationErrors ValidateFeatureData(FeatureDataDTO featureData)
+        public ValidationErrors ValidateFeatureData(AddFeatureModel featureData)
         {
             List<ValidationError> errors = new List<ValidationError>();
             ValidationErrors validationErrors = new ValidationErrors("feature", errors);

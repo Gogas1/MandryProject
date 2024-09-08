@@ -24,6 +24,10 @@ namespace Mandry.Data.Repositories
             foreach (var feat in housing.FeatureHousings)
             {
                 _dbContext.Attach(feat.Feature);
+                foreach (var param in feat.ParametersValues)
+                {
+                    _dbContext.Attach(param.Parameter);
+                }
             }
             _dbContext.Housings.Add(housing);
             await _dbContext.SaveChangesAsync();
@@ -41,6 +45,9 @@ namespace Mandry.Data.Repositories
                 .Include(h => h.FeatureHousings)
                 .ThenInclude(fh => fh.Feature)
                 .ThenInclude(f => f.Translation)
+                .Include(h => h.FeatureHousings)
+                .ThenInclude(fh => fh.ParametersValues)
+                .ThenInclude(pv => pv.Parameter)
 
                 .Include(h => h.Owner)
 
@@ -57,23 +64,18 @@ namespace Mandry.Data.Repositories
         public async Task<List<Housing>> GetAll()
         {
             return await _dbContext.Housings
-                .Include(h => h.FeatureHousings)
-                .ThenInclude(fh => fh.Feature)
-                .ThenInclude(f => f.FeatureImage)
-
-                .Include(h => h.FeatureHousings)
-                .ThenInclude(fh => fh.Feature)
-                .ThenInclude(f => f.Translation)
-
-                .Include(h => h.Owner)
-
-                .Include(h => h.Bedrooms)
-                .ThenInclude(bh => bh.Beds)
-
-                .Include(h => h.Images)
-                .Include(h => h.Category)
-                .ThenInclude(c => c.Translation)
-                .ToListAsync();
+            .Select(h => new Housing()
+            {
+                    Id = h.Id,
+                    Name = h.Name,
+                    OneLineDescription = h.OneLineDescription,
+                    CategoryProperty = h.CategoryProperty,
+                    Images = h.Images,
+                    Category = h.Category,
+                    PricePerNight = h.PricePerNight,
+                    Bedrooms = h.Bedrooms
+            })
+            .ToListAsync();
         }
     }
 }

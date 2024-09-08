@@ -15,11 +15,15 @@ namespace Mandry.Models.DB
         public bool IsHouseRule { get; set; }
         public string FeatureIcon { get; set; } = string.Empty;
         public bool IsCounterFeature { get; set; }
+        public bool IsSafetyFeature { get; set; }
 
-
+        [DeleteBehavior(DeleteBehavior.Cascade)]
         public Image FeatureImage { get; set; }
+        [DeleteBehavior(DeleteBehavior.Cascade)]
         public Feature? CounterFeature { get; set; }
+        [DeleteBehavior(DeleteBehavior.Cascade)]
         public ICollection<Parameter> Parameters { get; set; } = new List<Parameter>();
+        [DeleteBehavior(DeleteBehavior.Cascade)]
         public ICollection<FeatureHousing> FeatureHousing { get; set; } = new List<FeatureHousing>();
 
     }

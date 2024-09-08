@@ -8,5 +8,7 @@ namespace Mandry.Interfaces.Repositories
         Task<ICollection<Feature>> GetAllFeaturesAsync();
         Task<ICollection<Feature>> GetAllFeaturesWithTranslations();
         Task DeleteFeatures();
+        Task DeleteFeature(Feature feature);
+        Task<Feature?> GetFeatureById(Guid id);
     }
 }

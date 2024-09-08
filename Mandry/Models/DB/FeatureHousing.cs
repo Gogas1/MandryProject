@@ -12,6 +12,7 @@ namespace Mandry.Models.DB
         public Feature Feature { get; set; }
         [DeleteBehavior(DeleteBehavior.NoAction)]
         public Housing Housing { get; set; }
+        [DeleteBehavior(DeleteBehavior.Cascade)]
         public ICollection<ParameterFeatureHousing> ParametersValues { get; set; }
     }
 }

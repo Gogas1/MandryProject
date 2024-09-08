@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240908121314_HousingChanges3")]
+    partial class HousingChanges3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -542,10 +545,6 @@ namespace Mandry.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ParameterKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasIndex("FeatureId");
 
                     b.HasDiscriminator().HasValue("Parameter");
@@ -629,7 +628,7 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.Feature", "Feature")
                         .WithMany("FeatureHousing")
                         .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Mandry.Models.DB.Housing", "Housing")
@@ -674,13 +673,13 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.FeatureHousing", "FeatureHousing")
                         .WithMany("ParametersValues")
                         .HasForeignKey("FeatureHousingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Mandry.Models.DB.Parameter", "Parameter")
                         .WithMany("ParameterValuesForHousing")
                         .HasForeignKey("ParameterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FeatureHousing");
@@ -740,8 +739,7 @@ namespace Mandry.Migrations
                 {
                     b.HasOne("Mandry.Models.DB.Feature", "CounterFeature")
                         .WithMany()
-                        .HasForeignKey("CounterFeatureId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CounterFeatureId");
 
                     b.HasOne("Mandry.Models.DB.Image", "FeatureImage")
                         .WithMany()
@@ -759,7 +757,7 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.Feature", "Feature")
                         .WithMany("Parameters")
                         .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Feature");

@@ -1,8 +1,10 @@
-﻿using Mandry.Interfaces.Repositories;
+﻿using Mandry.Extensions;
+using Mandry.Interfaces.Repositories;
 using Mandry.Interfaces.Services;
 using Mandry.Models.DB;
 using Mandry.Models.DTOs.ApiDTOs;
 using Mandry.Models.DTOs.ApiDTOs.Features;
+using Mandry.Models.Requests.Feature;
 
 namespace Mandry.Services
 {
@@ -25,6 +27,8 @@ namespace Mandry.Services
             newFeature.IsAllowPinning = featureData.IsAllowPinning;
             newFeature.IsHouseRule = featureData.IsHouseRule;
             newFeature.IsRecomended = featureData.IsHouseRule;
+            newFeature.IsCounterFeature = featureData.IsCounterFeature;
+            newFeature.IsSafetyFeature = featureData.IsSafetyFeature;
             newFeature.TypeKey = featureData.TypeCode;
             newFeature.FeatureImage = new Image()
             {
@@ -37,67 +41,45 @@ namespace Mandry.Services
                 TranslationString = t.Text
             }).ToList();
 
-            newFeature = await _featureRepository.CreateFeatureAsync(newFeature);
-            return new FeatureDataDTO()
+            if(featureData.Parameters.Any())
             {
-                Id = newFeature.Id.ToString(),
-                NameCode = newFeature.NameKey,
-                DescriptionCode = newFeature.DescriptionKey,
-                IsAllowCustomDescription = newFeature.IsAllowCustomDescription,
-                IsAllowCustomName = newFeature.IsAllowCustomName,
-                IsAllowPinning = newFeature.IsAllowPinning,
-                IsHouseRule = newFeature.IsHouseRule,
-                IsRecommended = newFeature.IsRecomended,
-                TypeCode = newFeature.TypeKey,
-                FeatureIcon = new ImageDTO()
+                newFeature.Parameters = featureData.Parameters.Select(p =>
                 {
-                    Id = newFeature.FeatureImage.Id.ToString(),
-                    Src = newFeature.FeatureImage.Src,
-                },
-                Translations = newFeature.Translation.Select(t =>
-                {
-                    TranslationDTO translationDTO = new TranslationDTO();
-                    translationDTO.Key = t.TranslationKey;
-                    translationDTO.LanguageCode = t.Language;
-                    translationDTO.Text = t.TranslationString;
+                    Parameter parameter = new Parameter();
+                    parameter.NameKey = p.NameKey;
+                    parameter.DefaultValue = p.DefaultValue;
+                    parameter.Translation = p.Translations.Select(t => t.ToTranslation()).ToList();
 
-                    return translationDTO;
-                }).ToList()
-            };
+                    return parameter;
+                }).ToList();
+            }
+
+            newFeature = await _featureRepository.CreateFeatureAsync(newFeature);
+
+            return newFeature.ToDTO();
+        }
+
+        public async Task<FeatureDataDTO> CreateFeatureAsync(AddFeatureModel featureData)
+        {
+            Feature newFeature = featureData.ToFeature();
+            newFeature = await _featureRepository.CreateFeatureAsync(newFeature);
+
+            return newFeature.ToDTO();
+        }
+
+        public async Task DeleteFeature(string featureId)
+        {
+            Feature? targetFeature = await _featureRepository.GetFeatureById(Guid.Parse(featureId));
+            if(targetFeature != null) 
+            { 
+                await _featureRepository.DeleteFeature(targetFeature);
+            }
         }
 
         public async Task<ICollection<FeatureDataDTO>> GetFeaturesAsync()
         {
             var features = await _featureRepository.GetAllFeaturesWithTranslations();
-            var featuresDTO = features.Select(f =>
-            {
-                FeatureDataDTO featureDataDTO = new FeatureDataDTO();
-                featureDataDTO.Id = f.Id.ToString();
-                featureDataDTO.NameCode = f.NameKey;
-                featureDataDTO.DescriptionCode = f.DescriptionKey;
-                featureDataDTO.IsAllowCustomName = f.IsAllowCustomName;
-                featureDataDTO.IsAllowCustomDescription = f.IsAllowCustomDescription;
-                featureDataDTO.IsHouseRule = f.IsHouseRule;
-                featureDataDTO.IsRecommended = f.IsRecomended;
-                featureDataDTO.IsAllowPinning = f.IsAllowPinning;
-                featureDataDTO.TypeCode = f.TypeKey;
-                featureDataDTO.FeatureIcon = new ImageDTO()
-                {
-                    Id = f.FeatureImage.Id.ToString(),
-                    Src = f.FeatureImage.Src,
-                };
-                featureDataDTO.Translations = f.Translation.Select(t =>
-                {
-                    TranslationDTO translationDTO = new TranslationDTO();
-                    translationDTO.Key = t.TranslationKey;
-                    translationDTO.LanguageCode = t.Language;
-                    translationDTO.Text = t.TranslationString;
-
-                    return translationDTO;
-                }).ToList();
-
-                return featureDataDTO;
-            }).ToList();
+            var featuresDTO = features.Select(f => f.ToDTO()).ToList();
 
             return featuresDTO;
         }

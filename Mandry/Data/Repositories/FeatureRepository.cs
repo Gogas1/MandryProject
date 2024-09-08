@@ -23,6 +23,12 @@ namespace Mandry.Data.Repositories
             return feature;
         }
 
+        public async Task DeleteFeature(Feature feature)
+        {
+            _context.Features.Remove(feature);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteFeatures()
         {
             var features = await _context.Features.ToListAsync();
@@ -41,7 +47,14 @@ namespace Mandry.Data.Repositories
             return await _context.Features
                 .Include(f => f.Translation)
                 .Include(f => f.FeatureImage)
+                .Include(f => f.Parameters)
+                .ThenInclude(p => p.Translation)
                 .ToListAsync();
+        }
+
+        public async Task<Feature?> GetFeatureById(Guid id)
+        {
+            return await _context.Features.FirstOrDefaultAsync(f => f.Id == id);
         }
     }
 }

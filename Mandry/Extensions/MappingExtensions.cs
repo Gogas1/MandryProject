@@ -3,6 +3,8 @@ using Mandry.Models.DTOs.ApiDTOs;
 using Mandry.Models.DTOs.ApiDTOs.Categories;
 using Mandry.Models.Requests.Housing;
 using Mandry.Models.DTOs.ApiDTOs.Features;
+using Mandry.Models.Requests.Parameters;
+using Mandry.Models.Requests.Feature;
 
 namespace Mandry.Extensions
 {
@@ -22,6 +24,7 @@ namespace Mandry.Extensions
             housingDTO.LocationCountry = housing.LocationCountry;
             housingDTO.MaxGuests = housing.MaxGuests;
             housingDTO.Bathrooms = housing.Bathrooms;
+            housingDTO.CategoryProperty = housing.CategoryProperty ?? string.Empty;
             housingDTO.Category = new CategoryDTO()
             {
                 Id = housing.Category.Id.ToString(),
@@ -30,23 +33,34 @@ namespace Mandry.Extensions
                 IsCategoryPropertyRequired = housing.Category.IsCategoryPropertyRequired,
                 CategoryTranslations = housing.Category.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString }).ToList(),               
             };
-            housingDTO.Features = housing.FeatureHousings.Select(fh =>
+            if(housing.FeatureHousings != null)
             {
-                var featureDTO = new FeatureDataDTO();
-                featureDTO.Id = fh.Feature.Id.ToString();
-                featureDTO.NameCode = fh.Feature.NameKey;
-                featureDTO.DescriptionCode = fh.Feature.DescriptionKey;
-                featureDTO.TypeCode = fh.Feature.TypeKey;
-                featureDTO.IsAllowPinning = fh.Feature.IsAllowPinning;
-                featureDTO.IsRecommended = fh.Feature.IsRecomended;
-                featureDTO.IsAllowCustomName = fh.Feature.IsAllowCustomName;
-                featureDTO.IsAllowCustomDescription = fh.Feature.IsAllowCustomDescription;
-                featureDTO.IsHouseRule = fh.Feature.IsHouseRule;
-                featureDTO.FeatureIcon = new ImageDTO() { Id = fh.Feature.FeatureImage.Id.ToString(), Src = fh.Feature.FeatureImage.Src };
-                featureDTO.Translations = fh.Feature.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString}).ToList();
+                housingDTO.Features = housing.FeatureHousings.Select(fh =>
+                {
+                    var featureDTO = new FeatureDataDTO();
+                    featureDTO.Id = fh.Feature.Id.ToString();
+                    featureDTO.NameCode = fh.Feature.NameKey;
+                    featureDTO.DescriptionCode = fh.Feature.DescriptionKey;
+                    featureDTO.TypeCode = fh.Feature.TypeKey;
+                    featureDTO.IsAllowPinning = fh.Feature.IsAllowPinning;
+                    featureDTO.IsRecommended = fh.Feature.IsRecomended;
+                    featureDTO.IsAllowCustomName = fh.Feature.IsAllowCustomName;
+                    featureDTO.IsAllowCustomDescription = fh.Feature.IsAllowCustomDescription;
+                    featureDTO.IsHouseRule = fh.Feature.IsHouseRule;
+                    featureDTO.FeatureIcon = new ImageDTO() { Id = fh.Feature.FeatureImage.Id.ToString(), Src = fh.Feature.FeatureImage.Src };
+                    featureDTO.Translations = fh.Feature.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString }).ToList();
+                    featureDTO.Parameters = fh.ParametersValues.Select(pv =>
+                    {
+                        var parameterDto = new ParameterDTO();
+                        parameterDto.Value = pv.Value;
+                        parameterDto.ParameterKey = pv.Parameter.ParameterKey;
 
-                return featureDTO;
-            }).ToList();
+                        return parameterDto;
+                    }).ToList();
+
+                    return featureDTO;
+                }).ToList();
+            }
             housingDTO.Availabilities = housing.Availabilities.ToDays();
             housingDTO.Bedrooms = housing.Bedrooms.Select(b =>
             {
@@ -116,6 +130,9 @@ namespace Mandry.Extensions
             housing.LocationCountry = model.LocationCountry;
             housing.LocationPlace = model.LocationPlace;
             housing.Bathrooms = model.Bathrooms;
+            housing.CategoryProperty = model.CategoryProperty;
+            housing.OneLineDescription = model.OneLineDescription;
+            housing.LocationCoords = model.LocationCoords;
             housing.Bedrooms = model.Bedrooms.Select(b =>
             {
                 var newBedroom = new Bedroom();
@@ -123,10 +140,18 @@ namespace Mandry.Extensions
 
                 return newBedroom;
             }).ToList();
-            housing.FeatureHousings = model.FeaturesId.Select(feat =>
+            housing.FeatureHousings = model.Features.Select(feat =>
             {
                 var newFeatureHousing = new FeatureHousing();
-                newFeatureHousing.Feature = new Feature() { Id = Guid.Parse(feat) };
+                newFeatureHousing.Feature = new Feature() { Id = Guid.Parse(feat.Id) };
+                newFeatureHousing.ParametersValues = feat.Parameters.Select(p =>
+                {
+                    var newHousingFeatureParameter = new ParameterFeatureHousing();
+                    newHousingFeatureParameter.Parameter = new Parameter() { Id = Guid.Parse(p.Id) };
+                    newHousingFeatureParameter.Value = p.Value;
+
+                    return newHousingFeatureParameter;
+                }).ToList();
 
                 return newFeatureHousing;
             }).ToList();
@@ -143,6 +168,7 @@ namespace Mandry.Extensions
 
         #endregion Housing
 
+        #region Availabilities
         public static List<DateTime> ToDays(this ICollection<Availability> availabilities)
         {
             List<DateTime> days = new List<DateTime>();
@@ -186,6 +212,112 @@ namespace Mandry.Extensions
 
             return intervals;
         }
+        #endregion Availabilities
 
+        #region Translations
+
+        public static Translation ToTranslation(this TranslationDTO translationDTO)
+        {
+            Translation translation = new();
+            translation.TranslationKey = translationDTO.Key;
+            translation.Language = translationDTO.LanguageCode;
+            translation.TranslationString = translationDTO.Text;
+
+            return translation;
+        }
+
+        public static TranslationDTO ToDTO(this Translation translation)
+        {
+            TranslationDTO translationDTO = new();
+            translationDTO.Text = translation.TranslationString;
+            translationDTO.Key = translation.TranslationKey;
+            translationDTO.LanguageCode = translation.Language;
+
+            return translationDTO;
+        }
+
+        #endregion Translations
+
+        #region Parameters
+
+        public static Parameter ToParameter(this AddParameterModel model)
+        {
+            Parameter parameter = new Parameter();
+            parameter.NameKey = model.NameKey;
+            parameter.DefaultValue = model.DefaultValue;
+            parameter.Translation = model.Translations.Select(t => t.ToTranslation()).ToList();
+            parameter.ParameterKey = model.ParameterKey;
+
+            return parameter;
+        }
+
+        public static ParameterDTO ToDTO(this Parameter parameter)
+        {
+            ParameterDTO parameterDTO = new ParameterDTO();
+            parameterDTO.Id = parameter.Id.ToString();
+            parameterDTO.NameKey = parameter.NameKey;
+            parameterDTO.ParameterKey = parameter.ParameterKey;
+            parameterDTO.DefaultValue = parameter.DefaultValue;
+            parameterDTO.Translations = parameter.Translation.Select(t => t.ToDTO()).ToList();
+
+            return parameterDTO;
+        }
+
+        #endregion Parameters
+
+        #region Features
+
+        public static Feature ToFeature(this AddFeatureModel model)
+        {
+            Feature newFeature = new Feature();
+            newFeature.NameKey = model.NameCode;
+            newFeature.DescriptionKey = model.DescriptionCode;
+            newFeature.IsAllowCustomDescription = model.IsAllowCustomDescription;
+            newFeature.IsAllowCustomName = model.IsAllowCustomName;
+            newFeature.IsAllowPinning = model.IsAllowPinning;
+            newFeature.IsHouseRule = model.IsHouseRule;
+            newFeature.IsRecomended = model.IsHouseRule;
+            newFeature.IsCounterFeature = model.IsCounterFeature;
+            newFeature.IsSafetyFeature = model.IsSafetyFeature;
+            newFeature.TypeKey = model.TypeCode;
+            newFeature.FeatureImage = new Image()
+            {
+                Id = Guid.Parse(model.FeatureIcon.Id),
+            };
+            newFeature.Translation = model.Translations.Select(t => new Translation()
+            {
+                Language = t.LanguageCode,
+                TranslationKey = t.Key,
+                TranslationString = t.Text
+            }).ToList();
+            newFeature.Parameters = model.Parameters.Select(p => p.ToParameter()).ToList();
+
+            return newFeature;
+        }
+
+        public static FeatureDataDTO ToDTO(this Feature feature)
+        {
+            FeatureDataDTO featureDataDTO = new FeatureDataDTO();
+            featureDataDTO.Id = feature.Id.ToString();
+            featureDataDTO.NameCode = feature.NameKey;
+            featureDataDTO.DescriptionCode = feature.DescriptionKey;
+            featureDataDTO.IsAllowCustomName = feature.IsAllowCustomName;
+            featureDataDTO.IsAllowCustomDescription = feature.IsAllowCustomDescription;
+            featureDataDTO.IsHouseRule = feature.IsHouseRule;
+            featureDataDTO.IsRecommended = feature.IsRecomended;
+            featureDataDTO.IsAllowPinning = feature.IsAllowPinning;
+            featureDataDTO.TypeCode = feature.TypeKey;
+            featureDataDTO.FeatureIcon = new ImageDTO()
+            {
+                Id = feature.FeatureImage.Id.ToString(),
+                Src = feature.FeatureImage.Src,
+            };
+            featureDataDTO.Translations = feature.Translation.Select(t => t.ToDTO()).ToList();
+            featureDataDTO.Parameters = feature.Parameters.Select(p => p.ToDTO()).ToList();
+
+            return featureDataDTO;
+        }
+
+        #endregion Features
     }
 }

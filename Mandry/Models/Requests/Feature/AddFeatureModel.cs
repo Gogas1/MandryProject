@@ -1,6 +1,10 @@
-﻿namespace Mandry.Models.DTOs.ApiDTOs.Features
+﻿using Mandry.Models.DTOs.ApiDTOs.Features;
+using Mandry.Models.DTOs.ApiDTOs;
+using Mandry.Models.Requests.Parameters;
+
+namespace Mandry.Models.Requests.Feature
 {
-    public class FeatureDataDTO
+    public class AddFeatureModel
     {
         public string Id { get; set; } = string.Empty;
         public string NameCode { get; set; } = string.Empty;
@@ -16,6 +20,6 @@
 
         public ImageDTO FeatureIcon { get; set; }
         public ICollection<TranslationDTO> Translations { get; set; } = new List<TranslationDTO>();
-        public ICollection<ParameterDTO> Parameters { get; set; } = new List<ParameterDTO>();
+        public ICollection<AddParameterModel> Parameters { get; set; } = new List<AddParameterModel>();
     }
 }

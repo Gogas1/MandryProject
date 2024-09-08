@@ -8,7 +8,7 @@
         public string Description { get; set; }
         public string OneLineDescription { get; set; }
         public string ShortDescription { get; set; }
-        public string CategoryProperty { get; set; }
+        public string? CategoryProperty { get; set; }
         public string LocationPlace { get; set; }
         public string LocationCountry { get; set; }
         public string LocationCoords { get; set; }
