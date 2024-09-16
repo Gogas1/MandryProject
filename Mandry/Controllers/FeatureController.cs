@@ -72,7 +72,7 @@ namespace Mandry.Controllers
             }            
         }
 
-        [HttpPost("/f/delete-all")]
+        [HttpDelete("/f/delete-all")]
         public async Task<IActionResult> PurgeFeatures()
         {
             await _featureService.PurgeFeatures();

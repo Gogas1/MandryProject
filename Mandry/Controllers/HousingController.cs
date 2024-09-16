@@ -70,7 +70,14 @@ namespace Mandry.Controllers
                     return NotFound();
                 }
 
-                return Ok(housing.ToHousingDTO());
+                GetByIdResponse response = new GetByIdResponse();
+                response.Housing = housing.ToHousingDTO();
+                response.OwnerData = housing.Owner.ToDTO(false, true);
+                response.Housing.Reviews = await _housingService.GetHousingReviews(housing.Id);
+                response.Housing.ReviewsCount = await _housingService.GetHousingReviewsCount(housing.Id);
+                response.OwnerData.ReviewsCount = await _userService.GetUserReviewsCount(housing.Owner.Id);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -92,6 +99,12 @@ namespace Mandry.Controllers
                 return StatusCode(500, ex.Message);
             }
            
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFiltered([FromQuery] HousingFilterModel filters)
+        {
+            return Ok();
         }
     }
 }

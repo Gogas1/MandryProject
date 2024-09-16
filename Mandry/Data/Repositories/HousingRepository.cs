@@ -1,6 +1,7 @@
 ﻿using Mandry.Data.DbContexts;
 using Mandry.Interfaces.Repositories;
 using Mandry.Models.DB;
+using Mandry.Models.Requests.Housing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mandry.Data.Repositories
@@ -50,9 +51,14 @@ namespace Mandry.Data.Repositories
                 .ThenInclude(pv => pv.Parameter)
 
                 .Include(h => h.Owner)
+                .ThenInclude(o => o.ProfileImage)
+                .Include(h => h.Owner)
+                .ThenInclude(o => o.UserAbout)
 
                 .Include(h => h.Bedrooms)
                 .ThenInclude(bh => bh.Beds)
+
+                .Include(h => h.Availabilities)
 
                 .Include(h => h.Images)
                 .Include(h => h.Category)
@@ -105,6 +111,38 @@ namespace Mandry.Data.Repositories
         {
             _dbContext.Update(housing);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetReviewsCount(Guid id)
+        {
+            return await _dbContext.Reviews.Where(r => r.HousingTo.Id == id).CountAsync();
+        }
+
+        public async Task<ICollection<Review>> GetLastReviews(Guid housingId, int count)
+        {
+            return await _dbContext.Reviews
+                .Include(r => r.From)
+                .Where(r => r.HousingTo.Id == housingId)
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Housing>> FilterAsync(HousingFilterModel filter)
+        {
+            var query = _dbContext.Housings.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Destination))
+            {
+                var splitted = filter.Destination.Split(',');
+                query = query.Where(h => splitted.Contains(h.LocationCountry) || splitted.Contains(h.LocationPlace));
+            }
+
+            if(filter.FeatureIds != null && filter.FeatureIds.Any()) {
+                query = query.Where(h => h.FeatureHousings.Any(fh => filter.FeatureIds.Select(fi => Guid.Parse(fi)).Contains(fh.Feature.Id)));
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

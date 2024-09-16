@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240909145605_UserAbout")]
+    partial class UserAbout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,10 +212,6 @@ namespace Mandry.Migrations
                     b.Property<string>("CategoryProperty")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("CleaningFee")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -343,9 +342,6 @@ namespace Mandry.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("FromId")
                         .HasColumnType("uuid");

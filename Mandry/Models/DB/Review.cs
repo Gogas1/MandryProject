@@ -15,5 +15,6 @@ namespace Mandry.Models.DB
 
         [DeleteBehavior(DeleteBehavior.NoAction)]
         public Housing HousingTo { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

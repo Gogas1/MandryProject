@@ -5,5 +5,6 @@
         public UserDataDTO Creator { get; set; }
         public float Rating { get; set; }
         public string Text { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
     }
 }

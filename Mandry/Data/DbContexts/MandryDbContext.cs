@@ -49,6 +49,11 @@ namespace Mandry.Data.DbContexts
                 .WithMany(u => u.ReviewsReceived)
                 .HasForeignKey(r => r.ToId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.UserAbout)
+                .WithOne(ua => ua.User)
+                .HasForeignKey<UserAbout>(ua => ua.UserId);
         }
     }
 }

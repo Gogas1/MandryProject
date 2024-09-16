@@ -7,5 +7,6 @@ namespace Mandry.Interfaces.Repositories
         Task<Destination> CreateDestinationAsync(Destination destination);
         Task<ICollection<Destination>> GetAllDestinationsAsync();
         Task<ICollection<Destination>> GetDestinationsByNameAsync(string name);
+        Task CreateUniqueAsync(Destination destination);
     }
 }

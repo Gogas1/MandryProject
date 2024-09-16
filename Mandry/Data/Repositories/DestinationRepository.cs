@@ -30,7 +30,16 @@ namespace Mandry.Data.Repositories
 
         public async Task<ICollection<Destination>> GetDestinationsByNameAsync(string name)
         {
-            return await _context.Destinations.Where(d => d.Name.ToLowerInvariant().Contains(name.ToLowerInvariant())).ToListAsync();
+            return await _context.Destinations.Where(d => EF.Functions.Like(d.Name, $"%{name}%")).ToListAsync();
+        }
+
+        public async Task CreateUniqueAsync(Destination destination)
+        {
+            if(!_context.Destinations.Any(d => d.Name == destination.Name.Trim()))
+            {
+                _context.Destinations.Add(destination);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

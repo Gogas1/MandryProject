@@ -13,5 +13,8 @@ namespace Mandry.Interfaces.Repositories
         Task<User?> FindUserByPhoneAsync(string phone);
         Task<User?> FindUserByIdWithReviewsAsync(Guid id);
         Task<bool> IsExistingById(Guid id);
+        Task<User?> GetUserByHousingIdAsync(Guid housingId);
+        Task<int> GetUserReviewsCount(Guid userId);
+        Task UpdateUserOwnerStatus(Guid id);
     }
 }

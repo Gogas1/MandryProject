@@ -6,6 +6,7 @@ namespace Mandry.Models.Requests.Housing
     {
         public string Id { get; set; } = string.Empty;
         public decimal PricePerNight { get; set; }
+        public decimal CleaningFee { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? CategoryProperty { get; set; } = string.Empty;
         public string OneLineDescription { get; set; } = string.Empty;
@@ -18,7 +19,7 @@ namespace Mandry.Models.Requests.Housing
         public int Bathrooms { get; set; }
         public string CategoryId { get; set; } = string.Empty;
         public ICollection<AddHousingFeatureModel> Features { get; set; } = new List<AddHousingFeatureModel>();
-        public ICollection<DateTime> Availabilities = new List<DateTime>();
+        public ICollection<DateTime> Availabilities { get; set; } = new List<DateTime>();
         public ICollection<BedroomDTO> Bedrooms { get; set; } = new List<BedroomDTO>();
         public ICollection<ImageDTO> Images { get; set; } = new List<ImageDTO>();
     }

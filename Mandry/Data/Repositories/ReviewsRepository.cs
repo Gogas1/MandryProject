@@ -21,6 +21,7 @@ namespace Mandry.Data.Repositories
                 var targetReview = await _context.Reviews.FirstOrDefaultAsync(r => r.From.Id == review.From.Id && r.HousingTo.Id == review.HousingTo.Id);
                 if(targetReview != null)
                 {
+                    review.CreatedAt = DateTime.Now;
                     _context.Reviews.Update(review);
                     await _context.SaveChangesAsync();
 
@@ -33,6 +34,7 @@ namespace Mandry.Data.Repositories
                 var targetReview = await _context.Reviews.FirstOrDefaultAsync(r => r.From.Id == review.From.Id && r.To.Id == review.To.Id);
                 if (targetReview != null)
                 {
+                    review.CreatedAt = DateTime.Now;
                     _context.Reviews.Update(review);
                     await _context.SaveChangesAsync();
 
@@ -40,6 +42,7 @@ namespace Mandry.Data.Repositories
                 }
             }
 
+            review.CreatedAt = DateTime.Now;
             _context.Reviews.Add(review);
             _context.Attach(review.From);
 

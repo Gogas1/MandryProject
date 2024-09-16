@@ -1,4 +1,6 @@
 ﻿using Mandry.Models.DB;
+using Mandry.Models.DTOs.ApiDTOs.Reviews;
+using Mandry.Models.Requests.Housing;
 
 namespace Mandry.Interfaces.Services
 {
@@ -9,5 +11,8 @@ namespace Mandry.Interfaces.Services
         Task<List<Housing>> GetHousingListAsync();
         Task<bool> IsHousingExistingAsync(string id);
         Task EvaluateRating(string id);
+        Task<int> GetHousingReviewsCount(Guid housingId);
+        Task<List<ReviewDTO>> GetHousingReviews(Guid housingId);
+        Task<List<Housing>> GetFiltered(HousingFilterModel filters);
     }
 }

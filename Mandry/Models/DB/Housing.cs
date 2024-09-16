@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public decimal PricePerNight { get; set; }
+        public decimal CleaningFee { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string OneLineDescription { get; set; }

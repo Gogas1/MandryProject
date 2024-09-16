@@ -1,4 +1,5 @@
 ﻿using Mandry.Models.DB;
+using Mandry.Models.Requests.Housing;
 
 namespace Mandry.Interfaces.Repositories
 {
@@ -10,5 +11,8 @@ namespace Mandry.Interfaces.Repositories
         Task<bool> IsHousingExistingByIdAsync(Guid id);
         Task UpdateHousing(Housing housing);
         Task<float> GetHousingAverageRating(Guid id);
+        Task<int> GetReviewsCount(Guid id);
+        Task<ICollection<Review>> GetLastReviews(Guid housingId, int count);
+        Task<ICollection<Housing>> FilterAsync(HousingFilterModel filter);
     }
 }

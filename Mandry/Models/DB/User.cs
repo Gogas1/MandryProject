@@ -17,6 +17,7 @@ namespace Mandry.Models.DB
         public float AverageRating { get; set; }
 
         public Image? ProfileImage {  get; set; }
+        public UserAbout UserAbout { get; set; }
         public ICollection<Availability> Availability { get; set; } = new List<Availability>();
         public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
         [DeleteBehavior(DeleteBehavior.NoAction)]

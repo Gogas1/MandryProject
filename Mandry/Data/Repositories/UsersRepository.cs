@@ -24,12 +24,14 @@ namespace Mandry.Data.Repositories
 
         public async Task<User?> FindUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.Include(u => u.ProfileImage).FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User?> FindUserById(Guid id)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users
+                .Include(u => u.ProfileImage)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User?> FindUserByIdWithReviewsAsync(Guid id)
@@ -46,12 +48,16 @@ namespace Mandry.Data.Repositories
 
         public async Task<User?> FindUserByPhoneAndEmailAsync(string phone, string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Phone == phone && u.Email == email);
+            return await _context.Users
+                .Include(u => u.ProfileImage)
+                .FirstOrDefaultAsync(u => u.Phone == phone && u.Email == email);
         }
 
         public async Task<User?> FindUserByPhoneAsync(string phone)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Phone == phone);
+            return await _context.Users
+                .Include(u => u.ProfileImage)
+                .FirstOrDefaultAsync(u => u.Phone == phone);
         }
 
         public async Task<bool> IsExistingById(Guid id)
@@ -65,6 +71,36 @@ namespace Mandry.Data.Repositories
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<User?> GetUserByHousingIdAsync(Guid housingId)
+        {
+            return await _context.Users
+                .Include(u => u.UserAbout)
+                .Include(u => u.ProfileImage)
+                .FirstOrDefaultAsync(u => u.Housings.Any(h => h.Id == housingId));
+        }
+
+        public async Task<int> GetUserReviewsCount(Guid userId)
+        {
+            return await _context.Reviews
+                .Where(r => r.To.Id == userId)
+                .CountAsync();
+        }
+
+        public async Task UpdateUserOwnerStatus(Guid id)
+        {
+            var targerUser = await FindUserById(id);
+            if(targerUser != null)
+            {
+                targerUser.IsOwner = true;
+                if(targerUser.OwnerFrom == DateTime.MinValue)
+                {
+                    targerUser.OwnerFrom = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            
         }
     }
 }

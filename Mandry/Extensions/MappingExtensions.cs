@@ -20,6 +20,7 @@ namespace Mandry.Extensions
             HousingDTO housingDTO = new HousingDTO();
             housingDTO.Id = housing.Id.ToString();
             housingDTO.PricePerNight = housing.PricePerNight;
+            housingDTO.CleaningFee = housing.CleaningFee;
             housingDTO.Name = housing.Name;
             housingDTO.OneLineDescription = housing.OneLineDescription;
             housingDTO.ShortDescription = housing.ShortDescription;
@@ -29,6 +30,7 @@ namespace Mandry.Extensions
             housingDTO.MaxGuests = housing.MaxGuests;
             housingDTO.Bathrooms = housing.Bathrooms;
             housingDTO.CategoryProperty = housing.CategoryProperty ?? string.Empty;
+            housingDTO.AverageRating = housing.AverageRating;
             housingDTO.Category = new CategoryDTO()
             {
                 Id = housing.Category.Id.ToString(),
@@ -165,6 +167,7 @@ namespace Mandry.Extensions
                 return new Image() { Id = Guid.Parse(img.Id) };
             }).ToList();
             housing.PricePerNight = model.PricePerNight;
+            housing.CleaningFee = model.CleaningFee;
             housing.MaxGuests = model.MaxGuests;
             housing.Availabilities = model.Availabilities.ToAvailabilities();
 
@@ -341,7 +344,8 @@ namespace Mandry.Extensions
             ReviewDTO reviewDTO = new ReviewDTO();
             reviewDTO.Creator = review.From.ToDTO(false);
             reviewDTO.Text = review.Text;
-            reviewDTO.Rating = review.Rating;            
+            reviewDTO.Rating = review.Rating;
+            reviewDTO.CreatedAt = review.CreatedAt;
 
             return reviewDTO;
         }
@@ -350,7 +354,7 @@ namespace Mandry.Extensions
 
         #region User
 
-        public static UserDataDTO ToDTO(this User user, bool detailed = true)
+        public static UserDataDTO ToDTO(this User user, bool detailed = true, bool includeAbout = false)
         {
             UserDataDTO userData = new UserDataDTO();
             userData.Id = user.Id.ToString();
@@ -367,9 +371,47 @@ namespace Mandry.Extensions
                 userData.Email = user.Email ?? string.Empty;
             }            
 
+            if(includeAbout)
+            {
+                if(user.UserAbout != null)
+                {
+                    var userAbout = user.UserAbout;
+                    userData.UserAbout = new Models.DTOs.User.UserAboutDTO()
+                    {
+                        Biography = userAbout.Biography,
+                        Birthdate = userAbout.Birthday,
+                        Education = userAbout.Education,
+                        Fact = userAbout.Fact,
+                        MainHobby = userAbout.Hobby,
+                        Languages = userAbout.Languages,
+                        Residence = userAbout.Location,
+                        Pets = userAbout.Pets,
+                        Skills = userAbout.Skills,
+                        Song = userAbout.Song,
+                        Profession = userAbout.Profession,
+                        TimeThings = userAbout.TimeThings,
+                        AboutMe = userAbout.AboutMe
+                    };
+                }
+            }
+
             return userData;
         }
 
         #endregion User
+
+        #region Image
+
+        public static ImageDTO? ToDTO(this Image image)
+        {
+            if (image == null) return null;
+            return new ImageDTO()
+            {
+                Id = image.Id.ToString(),
+                Src = image.Src
+            };
+        }
+
+        #endregion Image
     }
 }

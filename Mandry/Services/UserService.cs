@@ -1,7 +1,9 @@
 ﻿using Mandry.Data.DbContexts;
+using Mandry.Extensions;
 using Mandry.Interfaces.Repositories;
 using Mandry.Interfaces.Services;
 using Mandry.Models.DB;
+using Mandry.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mandry.Services
@@ -58,5 +60,24 @@ namespace Mandry.Services
         {
             return await _userRepo.IsExistingById(Guid.Parse(id));
         }
+
+        public async Task<UserDataDTO> GetOwnerData(string housingId)
+        {
+            var user = await _userRepo.GetUserByHousingIdAsync(Guid.Parse(housingId));
+            if (user == null) throw new ArgumentNullException("");
+            return user.ToDTO();
+        }
+
+        public async Task<int> GetUserReviewsCount(Guid userId)
+        {
+            return await _userRepo.GetUserReviewsCount(userId);
+        }
+
+        public async Task<User> UpdateUserAvatar(User user, Image image)
+        {
+            user.ProfileImage = image;
+            return await _userRepo.UpdateUser(user);
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mandry.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Mandry.Models.Requests.Authentication;
+using Mandry.Extensions;
 
 namespace Mandry.Controllers
 {
@@ -67,6 +68,7 @@ namespace Mandry.Controllers
                         Email = user.Email ?? string.Empty,
                         Id = user.Id.ToString(),
                         Surname = user.Surname,
+                        Avatar = user.ProfileImage.ToDTO()
                     }
                 });
 
@@ -126,6 +128,7 @@ namespace Mandry.Controllers
                         Email = user.Email ?? string.Empty,
                         Id = user.Id.ToString(),
                         Surname = user.Surname,
+                        Avatar = user.ProfileImage.ToDTO()
                     }
                 });
             }

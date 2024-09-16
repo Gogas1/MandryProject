@@ -9,6 +9,9 @@ using Mandry.Models.Requests.Account;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Mandry.Models.Requests;
+using Mandry.Services;
+using Mandry.Extensions;
 
 namespace Mandry.Controllers
 {
@@ -19,17 +22,20 @@ namespace Mandry.Controllers
         private readonly ICredentialValidator _credentialValidator;
         private readonly IStringObfuscator _stringObfuscator;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IImageService _imageService;
 
         public AccountController(
-            IUserService userService, 
-            ICredentialValidator credentialValidator, 
-            IStringObfuscator stringObfuscator, 
-            IAuthenticationService authenticationService)
+            IUserService userService,
+            ICredentialValidator credentialValidator,
+            IStringObfuscator stringObfuscator,
+            IAuthenticationService authenticationService,
+            IImageService imageryService)
         {
             _userService = userService;
             _credentialValidator = credentialValidator;
             _stringObfuscator = stringObfuscator;
             _authenticationService = authenticationService;
+            _imageService = imageryService;
         }
 
         [HttpPost("auth/signup")]
@@ -189,6 +195,37 @@ namespace Mandry.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [Authorize]
+        [HttpPost("avatar/my/change")]
+        public async Task<IActionResult> ChangeMyAvatar([FromForm] ImageModel model)
+        {
+            if (model.File == null || model.File.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var user = HttpContext.User;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId != null)
+            {
+                var targetUser = await _userService.GetBasicUserByIdAsync(userId);
+
+                if (targetUser == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Image image = await _imageService.SaveImage(model.File, "images/users/");
+                    await _userService.UpdateUserAvatar(targetUser, image);
+                    return Ok(image.ToDTO());
+                }
+            }
+
+            return Unauthorized();     
         }
     }
 }
