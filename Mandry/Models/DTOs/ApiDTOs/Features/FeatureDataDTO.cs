@@ -13,6 +13,7 @@
         public bool IsHouseRule { get; set; }
         public bool IsCounterFeature { get; set; }
         public bool IsSafetyFeature { get; set; }
+        public string CounterFeatureTo { get; set; } = string.Empty;
 
         public ImageDTO FeatureIcon { get; set; }
         public ICollection<TranslationDTO> Translations { get; set; } = new List<TranslationDTO>();

@@ -3,6 +3,7 @@ using System;
 using Mandry.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mandry.Migrations
 {
     [DbContext(typeof(MandryDbContext))]
-    partial class MandryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240919083701_Favourites")]
+    partial class Favourites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -783,7 +786,7 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.Housing", "Housing")
                         .WithMany("FeatureHousings")
                         .HasForeignKey("HousingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Feature");
@@ -864,7 +867,7 @@ namespace Mandry.Migrations
                     b.HasOne("Mandry.Models.DB.Housing", "HousingTo")
                         .WithMany("Reviews")
                         .HasForeignKey("HousingToId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Mandry.Models.DB.User", "To")

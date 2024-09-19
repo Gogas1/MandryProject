@@ -16,6 +16,7 @@ namespace Mandry.Models.Requests.Feature
         public bool IsAllowCustomDescription { get; set; }
         public bool IsHouseRule { get; set; }
         public bool IsCounterFeature { get; set; }
+        public string CounterFeatureTo { get; set; }
         public bool IsSafetyFeature { get; set; }
 
         public ImageDTO FeatureIcon { get; set; }

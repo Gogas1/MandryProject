@@ -81,5 +81,18 @@ namespace Mandry.Services
             var result = await _housingRepository.FilterAsync(filters);
             return result.ToList();
         }
+
+        public async Task<MinMaxPrices> GetPrices()
+        {
+            decimal minPrice = await _housingRepository.GetMinPrice();
+            decimal maxPrice = await _housingRepository.GetMaxPrice();
+
+            return new MinMaxPrices { MinPrice = minPrice, MaxPrice = maxPrice };
+        }
+
+        public async Task DeleteAll()
+        {
+            await _housingRepository.DeleteAll();
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Mandry.Interfaces.Repositories
         Task DeleteFeatures();
         Task DeleteFeature(Feature feature);
         Task<Feature?> GetFeatureById(Guid id);
+        Task<bool> IsFeatureExisting(Guid id);
     }
 }

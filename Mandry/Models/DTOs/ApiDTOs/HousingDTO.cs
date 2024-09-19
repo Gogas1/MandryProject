@@ -21,6 +21,7 @@ namespace Mandry.Models.DTOs.ApiDTOs
         public int Bathrooms { get; set; }
         public float AverageRating { get; set; }
         public int ReviewsCount { get; set; }
+        public bool IsFavourite { get; set; }
         public CategoryDTO Category { get; set; }
         public ICollection<FeatureDataDTO> Features { get; set; } = new List<FeatureDataDTO>();
         public ICollection<DateTime> Availabilities { get; set; } = new List<DateTime>();

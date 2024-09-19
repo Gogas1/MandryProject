@@ -14,5 +14,13 @@ namespace Mandry.Interfaces.Services
         Task<int> GetHousingReviewsCount(Guid housingId);
         Task<List<ReviewDTO>> GetHousingReviews(Guid housingId);
         Task<List<Housing>> GetFiltered(HousingFilterModel filters);
+        Task<MinMaxPrices> GetPrices();
+        Task DeleteAll();
+    }
+
+    public struct MinMaxPrices
+    {
+        public decimal MinPrice { get; set; }
+        public decimal MaxPrice { get; set; }
     }
 }

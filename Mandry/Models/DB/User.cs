@@ -24,5 +24,6 @@ namespace Mandry.Models.DB
         public ICollection<Housing> Housings { get; set; } = new List<Housing>();
         public ICollection<Review> ReviewsReceived { get; set; } = new List<Review>();
         public ICollection<Review> ReviewsCreated { get; set; } = new List<Review>();
+        public ICollection<Housing> Favourites { get; set; } = new List<Housing>();
     }
 }

@@ -62,6 +62,16 @@ namespace Mandry.Services
         public async Task<FeatureDataDTO> CreateFeatureAsync(AddFeatureModel featureData)
         {
             Feature newFeature = featureData.ToFeature();
+
+            if (featureData.IsCounterFeature)
+            {
+                Feature? counterFeature = await _featureRepository.GetFeatureById(Guid.Parse(featureData.CounterFeatureTo));
+                if(counterFeature != null)
+                {
+                    newFeature.CounterFeature = counterFeature;
+                }
+            }
+
             newFeature = await _featureRepository.CreateFeatureAsync(newFeature);
 
             return newFeature.ToDTO();
@@ -74,6 +84,11 @@ namespace Mandry.Services
             { 
                 await _featureRepository.DeleteFeature(targetFeature);
             }
+        }
+
+        public async Task<bool> IsFeatureExisting(string id)
+        {
+            return await _featureRepository.IsFeatureExisting(Guid.Parse(id));
         }
 
         public async Task<ICollection<FeatureDataDTO>> GetFeaturesAsync()

@@ -14,5 +14,8 @@ namespace Mandry.Interfaces.Repositories
         Task<int> GetReviewsCount(Guid id);
         Task<ICollection<Review>> GetLastReviews(Guid housingId, int count);
         Task<ICollection<Housing>> FilterAsync(HousingFilterModel filter);
+        Task<decimal> GetMinPrice();
+        Task<decimal> GetMaxPrice();
+        Task DeleteAll();
     }
 }

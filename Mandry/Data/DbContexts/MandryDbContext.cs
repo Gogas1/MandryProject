@@ -54,6 +54,15 @@ namespace Mandry.Data.DbContexts
                 .HasOne(u => u.UserAbout)
                 .WithOne(ua => ua.User)
                 .HasForeignKey<UserAbout>(ua => ua.UserId);
+
+            modelBuilder.Entity<Housing>()
+                .HasMany(h => h.FavouriteTo)
+                .WithMany(u => u.Favourites);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Housings)
+                .WithOne(h => h.Owner)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

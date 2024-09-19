@@ -10,5 +10,6 @@ namespace Mandry.Interfaces.Services
         Task<ICollection<FeatureDataDTO>> GetFeaturesAsync();
         Task PurgeFeatures();
         Task DeleteFeature(string featureId);
+        Task<bool> IsFeatureExisting(string id);
     }
 }

@@ -130,7 +130,11 @@ namespace Mandry.Data.Repositories
 
         public async Task<ICollection<Housing>> FilterAsync(HousingFilterModel filter)
         {
-            var query = _dbContext.Housings.AsQueryable();
+            var query = _dbContext.Housings
+                .Include(h => h.Category)
+                .Include(h => h.Images)
+                .Include(h => h.Bedrooms)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(filter.Destination))
             {
@@ -138,11 +142,52 @@ namespace Mandry.Data.Repositories
                 query = query.Where(h => splitted.Contains(h.LocationCountry) || splitted.Contains(h.LocationPlace));
             }
 
+            if(!string.IsNullOrEmpty(filter.CategoryId))
+            {
+                query = query.Where(h => h.Category.Id == Guid.Parse(filter.CategoryId));
+            }
+
+            query = query.Where(h => h.PricePerNight >= filter.MinPrice);
+            if(filter.MaxPrice != 0)
+            {
+                query = query.Where(h => h.PricePerNight <= filter.MaxPrice);
+            }
+
+            if(filter.MinBedrooms != 0)
+            {
+                query = query.Where(h => h.Bedrooms.Count() >= filter.MinBedrooms);
+            }
+
+            if(filter.MinBathrooms != 0)
+            {
+                query = query.Where(h => h.Bathrooms >= filter.MinBathrooms);
+            }
+
+            //query = query.Where(h => h.MaxGuests >= filter.Adults + filter.Children + filter.Toddlers);
+
             if(filter.FeatureIds != null && filter.FeatureIds.Any()) {
                 query = query.Where(h => h.FeatureHousings.Any(fh => filter.FeatureIds.Select(fi => Guid.Parse(fi)).Contains(fh.Feature.Id)));
             }
 
             return await query.ToListAsync();
+        }
+
+        public async Task<decimal> GetMinPrice()
+        {
+            return await _dbContext.Housings.MinAsync(h => h.PricePerNight);
+        }
+
+        public async Task<decimal> GetMaxPrice()
+        {
+            return await _dbContext.Housings.MaxAsync(h => h.PricePerNight);
+        }
+
+        public async Task DeleteAll()
+        {
+            var housings = await _dbContext.Housings.ToListAsync();
+            _dbContext.Housings.RemoveRange(housings);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

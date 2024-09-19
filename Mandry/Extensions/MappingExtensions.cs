@@ -27,18 +27,24 @@ namespace Mandry.Extensions
             housingDTO.Description = housing.Description;
             housingDTO.LocationPlace = housing.LocationPlace;
             housingDTO.LocationCountry = housing.LocationCountry;
+            housingDTO.LocationCoords = housing.LocationCoords;
             housingDTO.MaxGuests = housing.MaxGuests;
             housingDTO.Bathrooms = housing.Bathrooms;
             housingDTO.CategoryProperty = housing.CategoryProperty ?? string.Empty;
-            housingDTO.AverageRating = housing.AverageRating;
-            housingDTO.Category = new CategoryDTO()
+            housingDTO.AverageRating = housing.AverageRating;    
+            
+            if(housing.Category != null)
             {
-                Id = housing.Category.Id.ToString(),
-                NameKey = housing.Category.NameKey,
-                CategoryPropertyDescriptionKey = housing.Category.CategoryPropertyDescriptionKey,
-                IsCategoryPropertyRequired = housing.Category.IsCategoryPropertyRequired,
-                CategoryTranslations = housing.Category.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString }).ToList(),               
-            };
+                housingDTO.Category = new CategoryDTO()
+                {
+                    Id = housing.Category.Id.ToString(),
+                    NameKey = housing.Category.NameKey,
+                    CategoryPropertyDescriptionKey = housing.Category.CategoryPropertyDescriptionKey,
+                    IsCategoryPropertyRequired = housing.Category.IsCategoryPropertyRequired,
+                    CategoryTranslations = housing.Category.Translation.Select(t => new TranslationDTO() { Key = t.TranslationKey, LanguageCode = t.Language, Text = t.TranslationString }).ToList(),               
+                };
+            }
+
             if(housing.FeatureHousings != null)
             {
                 housingDTO.Features = housing.FeatureHousings.Select(fh =>

@@ -39,6 +39,14 @@ namespace Mandry.Controllers
                     });
                 }
 
+                if(featureData.IsCounterFeature)
+                {
+                    if (!await _featureService.IsFeatureExisting(featureData.CounterFeatureTo))
+                    {
+                        return NotFound();
+                    }
+                }
+
                 var newFeature = await _featureService.CreateFeatureAsync(featureData);
 
                 return Ok(new CreateFeatureResponse

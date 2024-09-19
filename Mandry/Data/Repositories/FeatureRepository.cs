@@ -56,5 +56,10 @@ namespace Mandry.Data.Repositories
         {
             return await _context.Features.FirstOrDefaultAsync(f => f.Id == id);
         }
+
+        public async Task<bool> IsFeatureExisting(Guid id)
+        {
+            return await _context.Features.AnyAsync(f => f.Id == id);
+        }
     }
 }
