@@ -21,8 +21,19 @@ namespace Mandry.Data.Repositories
                 var targetReview = await _context.Reviews.FirstOrDefaultAsync(r => r.From.Id == review.From.Id && r.HousingTo.Id == review.HousingTo.Id);
                 if(targetReview != null)
                 {
-                    review.CreatedAt = DateTime.Now;
-                    _context.Reviews.Update(review);
+                    targetReview.From = review.From;
+                    targetReview.HousingTo = review.HousingTo;
+                    targetReview.To = review.To;
+                    targetReview.Text = review.Text;
+                    targetReview.Rating = review.Rating;
+
+                    _context.Attach(targetReview.From);
+
+                    if (targetReview.To != null) _context.Attach(review.To);
+                    if (targetReview.HousingTo != null) _context.Attach(review.HousingTo);
+
+                    targetReview.CreatedAt = DateTime.Now;
+                    _context.Reviews.Update(targetReview);
                     await _context.SaveChangesAsync();
 
                     return review;
@@ -34,8 +45,17 @@ namespace Mandry.Data.Repositories
                 var targetReview = await _context.Reviews.FirstOrDefaultAsync(r => r.From.Id == review.From.Id && r.To.Id == review.To.Id);
                 if (targetReview != null)
                 {
-                    review.CreatedAt = DateTime.Now;
-                    _context.Reviews.Update(review);
+                    targetReview.From = review.From;
+                    targetReview.To = review.To;
+                    targetReview.Text = review.Text;
+                    targetReview.Rating = review.Rating;
+
+                    _context.Attach(targetReview.From);
+
+                    if (targetReview.To != null) _context.Attach(review.To);
+
+                    targetReview.CreatedAt = DateTime.Now;
+                    _context.Reviews.Update(targetReview);
                     await _context.SaveChangesAsync();
 
                     return review;

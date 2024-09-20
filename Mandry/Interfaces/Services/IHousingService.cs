@@ -15,6 +15,7 @@ namespace Mandry.Interfaces.Services
         Task<List<ReviewDTO>> GetHousingReviews(Guid housingId);
         Task<List<Housing>> GetFiltered(HousingFilterModel filters);
         Task<MinMaxPrices> GetPrices();
+        Task<float> GetAverageRating(Housing housing);
         Task DeleteAll();
     }
 

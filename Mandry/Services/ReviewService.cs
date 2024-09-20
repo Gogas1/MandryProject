@@ -35,7 +35,7 @@ namespace Mandry.Services
 
                 review.To = new User() { Id = Guid.Parse(model.ToUserId) };
                 var reviewDto = await _reviewsRepository.CreateReview(review);
-                await _userService.EvaluateUserRating(model.ToUserId);
+                //await _userService.EvaluateUserRating(model.ToUserId);
 
                 return reviewDto.ToDTO();
             }
@@ -49,7 +49,7 @@ namespace Mandry.Services
 
                 review.HousingTo = new Housing() { Id = Guid.Parse(model.ToHousingId) };
                 var reviewDto = await _reviewsRepository.CreateReview(review);
-                await _housingService.EvaluateRating(model.ToHousingId);
+                //await _housingService.EvaluateRating(model.ToHousingId);
 
                 return reviewDto.ToDTO();
             }

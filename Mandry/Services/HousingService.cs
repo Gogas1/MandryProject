@@ -22,13 +22,18 @@ namespace Mandry.Services
             _destinationRepository = destinationRepository;
         }
 
+        public async Task<float> GetAverageRating(Housing housing)
+        {
+            return await _housingRepository.GetHousingAverageRating(housing.Id);
+        }
+
         public async Task EvaluateRating(string id)
         {
             Housing? housing = await _housingRepository.GetHousingByIdAsync(Guid.Parse(id));
             if (housing == null) return;
 
             housing.AverageRating = await _housingRepository.GetHousingAverageRating(housing.Id);
-            await _housingRepository.UpdateHousing(housing);
+            await _housingRepository.UpdateHousing(housing);        
         }
 
         public async Task<Housing?> GetHousingByIdAsync(string id)
