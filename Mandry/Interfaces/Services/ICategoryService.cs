@@ -6,5 +6,6 @@ namespace Mandry.Interfaces.Services
     {
         Task<CategoryDTO> CreateCategoryAsync(CategoryDTO categoryDTO);
         Task<ICollection<CategoryDTO>> GetCategoriesAsync();
+        Task DeleteCategory(string id);
     }
 }

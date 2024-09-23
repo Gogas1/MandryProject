@@ -7,10 +7,9 @@ namespace Mandry.Models.DB
         public Guid Id { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         public User Guest { get; set; }
         public Housing Housing { get; set; }
-        [DeleteBehavior(DeleteBehavior.NoAction)]
-        public ICollection<Bedroom> Bedrooms { get; set; } = new List<Bedroom>();
     }
 }

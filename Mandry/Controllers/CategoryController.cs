@@ -75,5 +75,19 @@ namespace Mandry.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteCategory(string id)
+        {
+            try
+            {
+                await _categoryService.DeleteCategory(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

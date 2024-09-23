@@ -35,5 +35,15 @@ namespace Mandry.Data.Repositories
                 .ThenInclude(c => c.Translation)
                 .ToListAsync();
         }
+
+        public async Task DeleteCategory(Guid id)
+        {
+            var target = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            if(target != null)
+            {
+                _context.Categories.Remove(target);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace Mandry.Extensions
             services.AddScoped<IHousingService, HousingService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IFavouritesService, FavouritesService>();
+            services.AddScoped<IReservationService, ReservationService>();
         }
     }
 }

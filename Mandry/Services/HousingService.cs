@@ -99,5 +99,10 @@ namespace Mandry.Services
         {
             await _housingRepository.DeleteAll();
         }
+
+        public async Task<bool> IsReservationAvailable(string housingId, DateTime DateFrom, DateTime DateTo)
+        {
+            return await _housingRepository.IsReservationAvailable(Guid.Parse(housingId), DateFrom, DateTo); 
+        }
     }
 }

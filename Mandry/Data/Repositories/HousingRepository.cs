@@ -3,6 +3,7 @@ using Mandry.Interfaces.Repositories;
 using Mandry.Models.DB;
 using Mandry.Models.Requests.Housing;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Mandry.Data.Repositories
 {
@@ -18,7 +19,7 @@ namespace Mandry.Data.Repositories
         public async Task<Housing> CreateHousingAsync(Housing housing)
         {
             _dbContext.Attach(housing.Category);
-            foreach(var image in housing.Images)
+            foreach (var image in housing.Images)
             {
                 _dbContext.Attach(image);
             }
@@ -38,7 +39,9 @@ namespace Mandry.Data.Repositories
 
         public async Task<Housing?> GetHousingByIdAsync(Guid id)
         {
-            return await _dbContext.Housings  
+            var tomorrow = DateTime.Now.Date.AddDays(1);
+
+            return await _dbContext.Housings
                 .Include(h => h.FeatureHousings)
                 .ThenInclude(fh => fh.Feature)
                 .ThenInclude(f => f.FeatureImage)
@@ -58,7 +61,8 @@ namespace Mandry.Data.Repositories
                 .Include(h => h.Bedrooms)
                 .ThenInclude(bh => bh.Beds)
 
-                .Include(h => h.Availabilities)
+                .Include(h => h.Availabilities.Where(a => a.To >= tomorrow))
+                .Include(h => h.Reservations.Where(r => r.To >= tomorrow))
 
                 .Include(h => h.Images)
                 .Include(h => h.Category)
@@ -76,7 +80,7 @@ namespace Mandry.Data.Repositories
 
             if (ratings.Any())
             {
-                var averageRating = ratings.Average();                
+                var averageRating = ratings.Average();
                 return averageRating;
             }
             else
@@ -90,14 +94,14 @@ namespace Mandry.Data.Repositories
             return await _dbContext.Housings
             .Select(h => new Housing()
             {
-                    Id = h.Id,
-                    Name = h.Name,
-                    OneLineDescription = h.OneLineDescription,
-                    CategoryProperty = h.CategoryProperty,
-                    Images = h.Images,
-                    Category = h.Category,
-                    PricePerNight = h.PricePerNight,
-                    Bedrooms = h.Bedrooms
+                Id = h.Id,
+                Name = h.Name,
+                OneLineDescription = h.OneLineDescription,
+                CategoryProperty = h.CategoryProperty,
+                Images = h.Images,
+                Category = h.Category,
+                PricePerNight = h.PricePerNight,
+                Bedrooms = h.Bedrooms
             })
             .ToListAsync();
         }
@@ -142,30 +146,30 @@ namespace Mandry.Data.Repositories
                 query = query.Where(h => splitted.Contains(h.LocationCountry) || splitted.Contains(h.LocationPlace));
             }
 
-            if(!string.IsNullOrEmpty(filter.CategoryId))
+            if (!string.IsNullOrEmpty(filter.CategoryId))
             {
                 query = query.Where(h => h.Category.Id == Guid.Parse(filter.CategoryId));
             }
 
             query = query.Where(h => h.PricePerNight >= filter.MinPrice);
-            if(filter.MaxPrice != 0)
+            if (filter.MaxPrice != 0)
             {
                 query = query.Where(h => h.PricePerNight <= filter.MaxPrice);
             }
 
-            if(filter.MinBedrooms != 0)
+            if (filter.MinBedrooms != 0)
             {
                 query = query.Where(h => h.Bedrooms.Count() >= filter.MinBedrooms);
             }
 
-            if(filter.MinBathrooms != 0)
+            if (filter.MinBathrooms != 0)
             {
                 query = query.Where(h => h.Bathrooms >= filter.MinBathrooms);
             }
 
             //query = query.Where(h => h.MaxGuests >= filter.Adults + filter.Children + filter.Toddlers);
 
-            if(filter.FeatureIds != null && filter.FeatureIds.Any()) {
+            if (filter.FeatureIds != null && filter.FeatureIds.Any()) {
                 query = query.Where(h => h.FeatureHousings.Any(fh => filter.FeatureIds.Select(fi => Guid.Parse(fi)).Contains(fh.Feature.Id)));
             }
 
@@ -188,6 +192,41 @@ namespace Mandry.Data.Repositories
             _dbContext.Housings.RemoveRange(housings);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsReservationAvailable(Guid housingId, DateTime DateFrom, DateTime DateTo)
+        {
+            if (DateFrom >= DateTo)
+            {
+                return false;
+            }
+
+            DateTime tomorrow = DateTime.Now.Date.AddDays(1);
+
+            var housingAvailabilities = await _dbContext.Availabilities.Where(a => a.Housing.Id == housingId).ToListAsync();
+            var validAvailabilities = await _dbContext.Availabilities
+                .Where(a => a.Housing.Id == housingId && a.To >= tomorrow && a.From <= DateFrom && a.To >= DateTo)
+                .ToListAsync();
+
+            if (!validAvailabilities.Any())
+            {
+                return false;
+            }
+
+            var collidingReservations = await _dbContext.Reservations
+                .Where(r => r.Housing.Id == housingId
+                            && r.To >= tomorrow
+                            && ((r.From <= DateFrom && r.To >= DateFrom)
+                || (r.From <= DateTo && r.To >= DateTo)      
+                            || (r.From >= DateFrom && r.To <= DateTo)))  
+                .ToListAsync();
+
+            if (collidingReservations.Any())
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

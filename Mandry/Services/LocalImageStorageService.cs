@@ -24,13 +24,26 @@ namespace Mandry.Services
                 Directory.CreateDirectory(uploadDir);
             }
 
-            var filePath = Path.Combine(uploadDir, file.FileName);
+            var uniqueFileName = GenerateUniqueFileName(file.FileName);
+            var filePath = Path.Combine(uploadDir, uniqueFileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return Path.Combine(subDirectory, file.FileName);
+            return Path.Combine(subDirectory, uniqueFileName);
+        }
+
+        private string GenerateUniqueFileName(string originalFileName)
+        {
+            // Get the file extension
+            string fileExtension = Path.GetExtension(originalFileName);
+
+            // Generate a unique identifier
+            string uniqueIdentifier = Guid.NewGuid().ToString();
+
+            // Combine the unique identifier and the file extension to create the final file name
+            return $"{uniqueIdentifier}{fileExtension}";
         }
     }
 }

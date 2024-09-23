@@ -74,7 +74,7 @@ namespace Mandry.Extensions
                     return featureDTO;
                 }).ToList();
             }
-            housingDTO.Availabilities = housing.Availabilities.ToDays();
+            housingDTO.Availabilities = housing.Availabilities.ToDays(housing.Reservations.ToList());
             housingDTO.Bedrooms = housing.Bedrooms.Select(b =>
             {
                 BedroomDTO bedroom = new BedroomDTO();
@@ -192,6 +192,25 @@ namespace Mandry.Extensions
                 {
                     days.Add(date);
                 }
+            }
+
+            return days;
+        }
+
+        public static List<DateTime> ToDays(this ICollection<Availability> availabilities, List<Reservation> reservations)
+        {
+            List<DateTime> days = new List<DateTime>();
+            foreach (var availability in availabilities)
+            {
+                for (DateTime date = availability.From.Date; date <= availability.To.Date; date = date.AddDays(1))
+                {
+                    days.Add(date);
+                }
+            }
+
+            foreach (var reservation in reservations)
+            {
+                days.RemoveAll(d => d >= reservation.From.Date && d <= reservation.To.Date);
             }
 
             return days;
@@ -419,5 +438,29 @@ namespace Mandry.Extensions
         }
 
         #endregion Image
+
+        #region Reservations
+
+        public static AddReservationModel ToNormal(this AddReservationModel model)
+        {
+            AddReservationModel normalizedModel = new AddReservationModel();
+            normalizedModel.DateTo = model.DateTo.Date;
+            normalizedModel.DateFrom = model.DateFrom.Date;
+            normalizedModel.UserId = model.UserId;
+            normalizedModel.HousingId = model.HousingId;
+
+            return normalizedModel;
+        }
+
+        public static Reservation ToReservation(this AddReservationModel model)
+        {
+            Reservation reservation = new Reservation();
+            reservation.From = model.DateFrom.Date;
+            reservation.To = model.DateTo.Date;
+            
+            return reservation;
+        }
+
+        #endregion Reservations
     }
 }

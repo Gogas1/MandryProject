@@ -17,5 +17,6 @@ namespace Mandry.Interfaces.Repositories
         Task<decimal> GetMinPrice();
         Task<decimal> GetMaxPrice();
         Task DeleteAll();
+        Task<bool> IsReservationAvailable(Guid housingId, DateTime DateFrom, DateTime DateTo);
     }
 }

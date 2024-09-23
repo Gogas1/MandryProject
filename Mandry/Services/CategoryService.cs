@@ -100,5 +100,10 @@ namespace Mandry.Services
 
             return categoriesDTO;
         }
+
+        public async Task DeleteCategory(string id)
+        {
+            await _categoryRepository.DeleteCategory(Guid.Parse(id));
+        }
     }
 }

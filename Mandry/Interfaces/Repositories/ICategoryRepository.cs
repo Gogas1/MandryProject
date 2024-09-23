@@ -7,5 +7,6 @@ namespace Mandry.Interfaces.Repositories
         Task<Category> CreateCategoryAsync(Category feature);
         Task<ICollection<Category>> GetAllCategoriesAsync();
         Task<ICollection<Category>> GetAllCategoriesWithTranslations();
+        Task DeleteCategory(Guid id);
     }
 }
