@@ -10,6 +10,7 @@ namespace Mandry.Data.DbContexts
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<GoogleUser> GoogleUsers { get; set; }
         public DbSet<AccessbilityFeature> AccessbilityFeatures { get; set; }
         public DbSet<AccessbilityFeatureHousing> AccessbilityFeaturesHousings { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
@@ -54,6 +55,11 @@ namespace Mandry.Data.DbContexts
                 .HasOne(u => u.UserAbout)
                 .WithOne(ua => ua.User)
                 .HasForeignKey<UserAbout>(ua => ua.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.GoogleUser)
+                .WithOne(gu => gu.User)
+                .HasForeignKey<GoogleUser>(gu => gu.UserId);
 
             modelBuilder.Entity<Housing>()
                 .HasMany(h => h.FavouriteTo)

@@ -1,17 +1,7 @@
-﻿using Mandry.Models.DB;
-
-namespace Mandry.Interfaces.Services
+﻿namespace Mandry.Models.DB
 {
-    public interface IAuthenticationService
+    public class GoogleUser
     {
-        string GetJwtFor(User user);
-        bool VerifyPassword(User user, string password);
-        Task<GoogleUserInfo?> VerifyGoogleAccessToken(string token);
-    }
-
-    public class GoogleUserInfo
-    {
-        public string AccessToken { get; set; } = string.Empty;
         public string Id { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public bool VerifiedEmail { get; set; } = false;
@@ -19,5 +9,8 @@ namespace Mandry.Interfaces.Services
         public string GivenName { get; set; } = string.Empty;
         public string FamilyName { get; set; } = string.Empty;
         public string Picture { get; set; } = string.Empty;
+
+        public Guid UserId { get; set; }
+        public User User { get; set; }
     }
 }

@@ -42,5 +42,6 @@ namespace Mandry.Interfaces.Services
         Task<bool> IsUserExistAsync(string id);
         Task<int> GetUserReviewsCount(Guid userId);
         Task<User> UpdateUserAvatar(User user, Image image);
+        Task<User?> GetUserByGoogleIdAsync(string id);
     }
 }

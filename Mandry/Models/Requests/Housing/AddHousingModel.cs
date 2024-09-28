@@ -5,9 +5,9 @@ namespace Mandry.Models.Requests.Housing
     public class AddHousingModel
     {
         public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public decimal PricePerNight { get; set; }
         public decimal CleaningFee { get; set; }
-        public string Name { get; set; } = string.Empty;
         public string? CategoryProperty { get; set; } = string.Empty;
         public string OneLineDescription { get; set; } = string.Empty;
         public string ShortDescription { get; set; } = string.Empty;

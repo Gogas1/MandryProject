@@ -16,5 +16,6 @@ namespace Mandry.Interfaces.Repositories
         Task<User?> GetUserByHousingIdAsync(Guid housingId);
         Task<int> GetUserReviewsCount(Guid userId);
         Task UpdateUserOwnerStatus(Guid id);
+        Task<User?> FindUserByGoogleIdAsync(string id);
     }
 }

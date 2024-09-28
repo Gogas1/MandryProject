@@ -54,10 +54,10 @@ namespace Mandry.Controllers
                 ValidationErrors surnameErrors = _credentialValidator.ValidateNotNull(surname, "surname");
                 ValidationErrors birthDateErrors = _credentialValidator.ValidateBirthDate(birthDate);
 
-                if(!nameErrors.IsValid || !surnameErrors.IsValid)
+                if (!nameErrors.IsValid || !birthDateErrors.IsValid)
                 {
                     ICollection<ValidationErrors> errorsGroups = [nameErrors, surnameErrors, birthDateErrors];
-                    
+
                     return BadRequest(new SignUpResponse()
                     {
                         IsValidationFailed = true,
@@ -102,12 +102,12 @@ namespace Mandry.Controllers
                 {
                     Name = name,
                     Surname = surname,
-                    Email =  email,
+                    Email = email,
                     Phone = phone,
                     BirthDate = DateOnly.FromDateTime(birthDate),
                 };
 
-                if(!string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(password))
                 {
                     newUser.PasswordHash = passwordHasher.HashPassword(newUser, password);
                 }
@@ -127,10 +127,116 @@ namespace Mandry.Controllers
                         Phone = !string.IsNullOrEmpty(newUser.Phone) ? newUser.Phone : string.Empty,
                     }
                 });
-
-            } catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost("auth/signup-google")]
+        public async Task<IActionResult> SignUpGoogle([FromBody] SignUpGoogleModel model)
+        {
+            string name = model.Name;
+            string surname = model.Surname;
+            string phone = model.Phone;
+            string accessToken = model.Accesstoken;
+            DateTime birthDate = model.BirthDate;
+
+            try
+            {
+                ValidationErrors nameErrors = _credentialValidator.ValidateNotNull(name, "name");
+                ValidationErrors surnameErrors = _credentialValidator.ValidateNotNull(surname, "surname");
+                ValidationErrors birthDateErrors = _credentialValidator.ValidateBirthDate(birthDate);
+
+                if (!nameErrors.IsValid || !birthDateErrors.IsValid)
+                {
+                    ICollection<ValidationErrors> errorsGroups = [nameErrors, surnameErrors, birthDateErrors];
+
+                    return BadRequest(new SignUpResponse()
+                    {
+                        IsValidationFailed = true,
+                        ValidationErrorsGrous = errorsGroups
+                    });
+                }
+
+                if(!string.IsNullOrEmpty(phone))
+                {
+                    ValidationErrors phoneErrors = _credentialValidator.ValidatePhone(phone);
+
+                    ICollection<ValidationErrors> errorsGroups = [phoneErrors];
+
+                    return BadRequest(new SignUpResponse()
+                    {
+                        IsValidationFailed = true,
+                        ValidationErrorsGrous = errorsGroups
+                    });
+                }
+
+                var googleData = await _authenticationService.VerifyGoogleAccessToken(accessToken);
+
+                if(googleData == null)
+                {
+                    return Unauthorized();
+                }
+
+                User? user = await _userService.GetBasicUserByPhoneOrEmailAsync(phone, googleData.Email);
+
+                if (user != null)
+                {
+                    return Conflict(new SignUpResponse()
+                    {
+                        IsAccountExisting = true,
+                        ObfuscatedUserData = new SignUpObfuscatedUserData()
+                        {
+                            Email = _stringObfuscator.ObfuscateEmail(user.Email ?? string.Empty),
+                            Name = user.Name,
+                            Phone = _stringObfuscator.ObfuscatePhone(user.Phone ?? string.Empty),
+                        }
+                    });
+                }
+
+                User newUser = new User()
+                {
+                    Name = name,
+                    Surname = surname,
+                    Email = googleData.Email,
+                    Phone = phone,
+                    BirthDate = DateOnly.FromDateTime(birthDate),
+                };
+
+                GoogleUser googleUser = new GoogleUser()
+                {
+                    Email = googleData.Email,
+                    FamilyName = googleData.FamilyName,
+                    Name = googleData.Name,
+                    GivenName = googleData.GivenName,
+                    Id = googleData.Id,
+                    Picture = googleData.Picture,
+                    VerifiedEmail = googleData.VerifiedEmail,
+                };
+
+                newUser.GoogleUser = googleUser;
+
+                newUser = await _userService.CreateUserAsync(newUser);
+                string jwt = _authenticationService.GetJwtFor(newUser);
+
+                return Ok(new SignUpResponse()
+                {
+                    Success = true,
+                    Token = jwt,
+                    UserData = new Models.DTOs.UserDataDTO()
+                    {
+                        Email = !string.IsNullOrEmpty(newUser.Email) ? newUser.Email : string.Empty,
+                        Name = newUser.Name,
+                        Surname = newUser.Surname,
+                        Phone = !string.IsNullOrEmpty(newUser.Phone) ? newUser.Phone : string.Empty,
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
             }
         }
 
@@ -227,5 +333,6 @@ namespace Mandry.Controllers
 
             return Unauthorized();     
         }
+
     }
 }

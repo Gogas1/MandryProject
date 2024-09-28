@@ -79,5 +79,9 @@ namespace Mandry.Services
             return await _userRepo.UpdateUser(user);
         }
 
+        public async Task<User?> GetUserByGoogleIdAsync(string id)
+        {
+            return await _userRepo.FindUserByGoogleIdAsync(id);
+        }
     }
 }

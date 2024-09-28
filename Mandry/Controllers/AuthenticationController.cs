@@ -144,5 +144,74 @@ namespace Mandry.Controllers
         {
             return Ok(new { verified = true });
         }
+
+        [HttpGet("verify-google")]
+        public async Task<IActionResult> VerifyGoogleToken(string accessToken)
+        {
+            try
+            {
+                var googleUserData = await _authenticationService.VerifyGoogleAccessToken(accessToken);
+                if(googleUserData != null)
+                {
+                    return Ok(new VerifyGoogleTokenResponse { UserInfo = googleUserData, AccessToken = accessToken });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (Exception ex) 
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost("signin/google")]
+        public async Task<IActionResult> SignInGoogle(string accessToken)
+        {
+            try
+            {
+                var googleUserData = await _authenticationService.VerifyGoogleAccessToken(accessToken);
+                if (googleUserData != null)
+                {
+                    User? user = await _userService.GetUserByGoogleIdAsync(googleUserData.Id);
+
+                    if(user == null)
+                    {
+                        SignInGoogleResponse result = new SignInGoogleResponse()
+                        {
+                            IsAccountExisting = false,
+                            UserInfo = googleUserData,
+                        };
+                        result.UserInfo.AccessToken = accessToken;
+
+                        return Unauthorized(result);
+                    }
+
+                    string token = _authenticationService.GetJwtFor(user);
+
+                    return Ok(new SignInGoogleResponse()
+                    {
+                        Token = token,  
+                        UserData = new UserDataDTO()
+                        {
+                            Name = user.Name,
+                            Email = user.Email ?? string.Empty,
+                            Id = user.Id.ToString(),
+                            Surname = user.Surname,
+                            Avatar = user.ProfileImage.ToDTO()
+                        }
+                    });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
     }
 }

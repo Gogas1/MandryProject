@@ -102,5 +102,16 @@ namespace Mandry.Data.Repositories
             }
             
         }
+
+        public async Task<User?> FindUserByGoogleIdAsync(string id)
+        {
+            var targetGoogleUser = await _context.GoogleUsers
+                .Include(g => g.User)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (targetGoogleUser == null) return null;
+
+            return targetGoogleUser.User;
+        }
     }
 }
