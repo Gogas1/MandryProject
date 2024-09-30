@@ -18,6 +18,7 @@ namespace Mandry.Interfaces.Services
         Task<float> GetAverageRating(Housing housing);
         Task DeleteAll();
         Task<bool> IsReservationAvailable(string housingId, DateTime DateFrom, DateTime DateTo);
+        Task<int> GetFilteredCount(HousingFilterModel filters);
     }
 
     public struct MinMaxPrices

@@ -17,5 +17,7 @@
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public List<string>? Languages { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; } = 6;
     }
 }

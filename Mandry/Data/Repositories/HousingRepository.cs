@@ -173,6 +173,9 @@ namespace Mandry.Data.Repositories
                 query = query.Where(h => h.FeatureHousings.Any(fh => filter.FeatureIds.Select(fi => Guid.Parse(fi)).Contains(fh.Feature.Id)));
             }
 
+            int page = Math.Max(filter.Page, 1);
+            query = query.Skip(filter.PageSize * (page - 1)).Take(filter.PageSize);
+
             return await query.ToListAsync();
         }
 
@@ -227,6 +230,51 @@ namespace Mandry.Data.Repositories
             }
 
             return true;
+        }
+
+        public async Task<int> FilteredCountAsync(HousingFilterModel filter)
+        {
+            var query = _dbContext.Housings
+                .Include(h => h.Category)
+                .Include(h => h.Images)
+                .Include(h => h.Bedrooms)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Destination))
+            {
+                var splitted = filter.Destination.Split(',');
+                query = query.Where(h => splitted.Contains(h.LocationCountry) || splitted.Contains(h.LocationPlace));
+            }
+
+            if (!string.IsNullOrEmpty(filter.CategoryId))
+            {
+                query = query.Where(h => h.Category.Id == Guid.Parse(filter.CategoryId));
+            }
+
+            query = query.Where(h => h.PricePerNight >= filter.MinPrice);
+            if (filter.MaxPrice != 0)
+            {
+                query = query.Where(h => h.PricePerNight <= filter.MaxPrice);
+            }
+
+            if (filter.MinBedrooms != 0)
+            {
+                query = query.Where(h => h.Bedrooms.Count() >= filter.MinBedrooms);
+            }
+
+            if (filter.MinBathrooms != 0)
+            {
+                query = query.Where(h => h.Bathrooms >= filter.MinBathrooms);
+            }
+
+            //query = query.Where(h => h.MaxGuests >= filter.Adults + filter.Children + filter.Toddlers);
+
+            if (filter.FeatureIds != null && filter.FeatureIds.Any())
+            {
+                query = query.Where(h => h.FeatureHousings.Any(fh => filter.FeatureIds.Select(fi => Guid.Parse(fi)).Contains(fh.Feature.Id)));
+            }
+
+            return await query.CountAsync();
         }
     }
 }

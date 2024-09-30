@@ -154,6 +154,9 @@ namespace Mandry.Controllers
                 var housings = await _housingService.GetFiltered(filters);
                 var housingDTOs = housings.Select(h => h.ToHousingDTO()).ToList();
 
+                double elementsCount = await _housingService.GetFilteredCount(filters);
+                int pagesCount = (int)Math.Ceiling(elementsCount / filters.PageSize);
+
                 var user = HttpContext.User;
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -171,7 +174,7 @@ namespace Mandry.Controllers
                     }
                 }
 
-                var response = new GetAllResponse() { Housings = housingDTOs };
+                var response = new GetAllResponse() { Housings = housingDTOs, TotalPages = pagesCount };
                 return Ok(response);
             }
             catch (Exception ex)

@@ -104,5 +104,10 @@ namespace Mandry.Services
         {
             return await _housingRepository.IsReservationAvailable(Guid.Parse(housingId), DateFrom, DateTo); 
         }
+
+        public async Task<int> GetFilteredCount(HousingFilterModel filters)
+        {
+            return await _housingRepository.FilteredCountAsync(filters);
+        }
     }
 }
