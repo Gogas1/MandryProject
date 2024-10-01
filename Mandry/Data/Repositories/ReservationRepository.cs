@@ -29,5 +29,14 @@ namespace Mandry.Data.Repositories
             _dbContext.Entry(target).State = EntityState.Deleted;
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsByUserIdAsync(Guid userId)
+        {
+            return await _dbContext.Reservations
+                                 .Include(r => r.Housing)
+                                    .ThenInclude(h => h.Images)
+                                 .Where(r => r.Guest.Id == userId)
+                                 .ToListAsync();
+        }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Mandry.ApiResponses.Account;
+using Mandry.ApiResponses.Reservations;
 using Mandry.Extensions;
 using Mandry.Interfaces.Services;
 using Mandry.Models.Requests.Housing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Mandry.Controllers
@@ -64,6 +66,48 @@ namespace Mandry.Controllers
             catch (Exception ex) 
             {
                 return StatusCode(500, ex);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user-reservations")]
+        public async Task<IActionResult> GetUserReservations()
+        {
+            try
+            {
+                var user = HttpContext.User;
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId != null)
+                {
+                    var targetUser = await _userService.GetBasicUserByIdAsync(userId);
+
+                    if (targetUser == null)
+                    {
+                        GetUserReservationsResponse response = new GetUserReservationsResponse
+                        {
+                            HasReservations = false
+                        };
+                        return NotFound(response);
+                    }
+                    else
+                    {
+                        var reservations = await _reservationService.GetUserReservationsDtoByUserIdAsync(userId);
+                        GetUserReservationsResponse response = new GetUserReservationsResponse
+                        {
+                            HasReservations = reservations.Any(),
+                            Reservations = reservations.ToList()
+                        };
+
+                        return Ok(response);
+                    }
+                }
+
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { ErrorMessage = ex.Message });
             }
         }
     }

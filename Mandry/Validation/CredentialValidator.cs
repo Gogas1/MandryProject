@@ -133,7 +133,7 @@ namespace Mandry.Validation
         public int PasswordMinSpecChars { get; set; } = 1;
         public int PasswordMinUppercase { get; set; } = 1;
         public int PasswordMinLowercase { get; set; } = 0;
-        public int PasswordMinLength { get; set; } = 4;
+        public int PasswordMinLength { get; set; } = 8;
         public int PasswordMaxLength { get; set; } = 128;
         public string SpecialCharacters { get; set; } = "!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/`~";
         #endregion Password settings

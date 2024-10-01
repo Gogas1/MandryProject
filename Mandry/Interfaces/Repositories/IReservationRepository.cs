@@ -6,5 +6,7 @@ namespace Mandry.Interfaces.Repositories
     {
         Task<Reservation> CreateReservation(Reservation reservation);
         Task DeleteReservation(Guid id);
+
+        Task<IEnumerable<Reservation>> GetReservationsByUserIdAsync(Guid userId);
     }
 }

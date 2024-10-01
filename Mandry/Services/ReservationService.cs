@@ -4,6 +4,7 @@ using Mandry.Interfaces.Services;
 using Mandry.Models.Requests.Housing;
 using Mandry.Models.DB;
 using System.Text;
+using Mandry.Models.DTOs.ApiDTOs.Reservations;
 
 namespace Mandry.Services
 {
@@ -53,6 +54,26 @@ namespace Mandry.Services
             }
 
             return result.ToString();
+        }
+
+        public async Task<IEnumerable<ReservationDTO>> GetUserReservationsDtoByUserIdAsync(string userId)
+        {
+            var userGuid = Guid.Parse(userId);
+            var reservations = await _reservationRepository.GetReservationsByUserIdAsync(userGuid);
+
+            return reservations.Select(r => new ReservationDTO
+            {
+                Id = r.Id,
+                From = r.From,
+                To = r.To,
+                Code = r.Code,
+                FullPrice = r.FullPrice,
+                Housing = new HousingDTO
+                {
+                    Name = r.Housing.Name,
+                    ImageUrl = r.Housing.Images.FirstOrDefault()?.Src ?? string.Empty // Первое изображение или пустая строка
+                }
+            }).ToList();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Mandry.Models.DB;
 using Mandry.Models.Requests.Housing;
+using Mandry.Models.DTOs.ApiDTOs.Reservations;
 
 namespace Mandry.Interfaces.Services
 {
@@ -7,5 +8,7 @@ namespace Mandry.Interfaces.Services
     {
         Task<Reservation> AddReservation(AddReservationModel addReservationModel, User user);
         Task DeleteReservation(string id);
+
+        Task<IEnumerable<ReservationDTO>> GetUserReservationsDtoByUserIdAsync(string userId);
     }
 }
