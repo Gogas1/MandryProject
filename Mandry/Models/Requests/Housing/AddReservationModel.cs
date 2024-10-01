@@ -6,5 +6,6 @@
         public DateTime DateTo { get; set; }
         public string HousingId { get; set; } = string.Empty;        
         public string UserId { get; set; } = string.Empty;
+        public decimal FullPrice { get; set; }
     }
 }

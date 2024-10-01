@@ -446,6 +446,7 @@ namespace Mandry.Extensions
             AddReservationModel normalizedModel = new AddReservationModel();
             normalizedModel.DateTo = model.DateTo.Date;
             normalizedModel.DateFrom = model.DateFrom.Date;
+            normalizedModel.FullPrice = model.FullPrice;
             normalizedModel.UserId = model.UserId;
             normalizedModel.HousingId = model.HousingId;
 
@@ -457,6 +458,7 @@ namespace Mandry.Extensions
             Reservation reservation = new Reservation();
             reservation.From = model.DateFrom.Date;
             reservation.To = model.DateTo.Date;
+            reservation.FullPrice = model.FullPrice;
             
             return reservation;
         }
