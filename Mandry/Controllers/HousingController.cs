@@ -80,7 +80,7 @@ namespace Mandry.Controllers
                 response.Housing.Reviews = await _housingService.GetHousingReviews(housing.Id);
                 response.Housing.ReviewsCount = await _housingService.GetHousingReviewsCount(housing.Id);
                 response.OwnerData.ReviewsCount = await _userService.GetUserReviewsCount(housing.Owner.Id);
-                response.Housing.AverageRating = await _housingService.GetAverageRating(housing);
+                response.Housing.AverageRating = await _housingService.GetAverageRating(housing);                
 
                 var user = HttpContext.User;
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;

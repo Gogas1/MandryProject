@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /AirBnbClone/appsettings.Development.json
 /Mandry/appsettings.json
 /Mandry/wwwroot/images/
+Mandry.zip
+/Mandry/aws-beanstalk-tools-defaults.json

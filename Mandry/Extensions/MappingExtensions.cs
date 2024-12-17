@@ -82,7 +82,7 @@ namespace Mandry.Extensions
 
                 return bedroom;
             }).ToList();
-            housingDTO.Images = housing.Images.Select(i => new ImageDTO() { Id = i.Id.ToString(), Src = i.Src }).ToList();
+            housingDTO.Images = housing.Images.OrderBy(i => i.CreatedAt).Select(i => new ImageDTO() { Id = i.Id.ToString(), Src = i.Src }).ToList();
 
             return housingDTO;
         }
